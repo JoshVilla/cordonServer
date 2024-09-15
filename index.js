@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const AdminModel = require("./models/Admin");
+const SiteInfoModel = require("./models/SiteInfo");
 require("dotenv").config();
 const app = express();
 app.use(cors());
@@ -40,35 +41,6 @@ app.post("/addAdmin", (req, res) => {
     })
     .catch((err) => res.json(err));
 });
-
-// app.post("/save", async (req, res) => {
-//   let newAdminData = {
-//     isActive: false,
-//   };
-
-//   if (req.body.username) newAdminData.username = req.body.username;
-//   if (req.body.password)
-//     newAdminData.password = Buffer.from(req.body.password).toString("base64");
-//   if (req.body.isSuperAdmin)
-//     newAdminData.isSuperAdmin = req.body.isSuperAdmin === -1 ? false : true;
-
-//   if (req.body.id) {
-//     newAdminData._id = req.body.id; // Set custom ID if provided
-//   }
-
-//   // Create a new admin document
-//   const newAdmin = new AdminModel(newAdminData);
-
-//   // Save the admin to the database
-//   const savedAdmin = await newAdmin.save();
-
-//   // Send response back with the saved admin's ID
-//   res.status(201).json({
-//     message: "Admin saved successfully",
-//     id: savedAdmin._id, // Include the generated or provided _id in the response
-//     admin: savedAdmin,
-//   });
-// });
 
 app.post("/save", (req, res) => {
   const { id, username, password, isSuperAdmin } = req.body;
@@ -180,6 +152,51 @@ app.post("/update", (req, res) => {
     .catch((err) => res.json(err));
 });
 
+app.get("/siteInfo", (req, res) => {
+  SiteInfoModel.find()
+    .then((result) => {
+      return res.status(200).json(result);
+    })
+    .catch((err) => {
+      res
+        .status(500)
+        .json({ error: "An error occurred while fetching site info" });
+    });
+});
+
+app.post("/siteInfoUpdate", (req, res) => {
+  const { id, title, address, accounts, vision, mission } = req.body;
+  let params = {};
+
+  if (title) params.title = title;
+  if (address) params.address = address;
+  if (vision) params.vision = vision;
+  if (mission) params.mission = mission;
+
+  if (accounts) {
+    params.accounts = {};
+    if (accounts.facebook) params.accounts.facebook = accounts.facebook;
+    if (accounts.twitter) params.accounts.twitter = accounts.twitter;
+    if (accounts.tiktok) params.accounts.tiktok = accounts.tiktok;
+  }
+
+  // Update the document by ID
+  SiteInfoModel.findByIdAndUpdate(id, params, {
+    new: true, // Return the updated document
+    runValidators: true, // Ensure validation rules are applied
+  })
+    .then((result) => {
+      if (!result) {
+        return res.status(404).json({ error: "Document not found" });
+      }
+      return res.json({ message: "Data Updated" }); // Send the updated document to the client
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).json({ error: "An error occurred while updating" });
+    });
+});
+
 app.listen(PORT, () => {
-  console.log("Server Running at" + PORT);
+  console.log("Server Runnsding at " + PORT);
 });

@@ -9,37 +9,55 @@ app.use(cors());
 app.use(express.json());
 
 const base64 = require("base-64");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+const upload = require("./middleware/upload");
 const PORT = process.env.port || 5000;
 mongoose
   .connect("mongodb+srv://test:Test123@cluster0.y3kde2g.mongodb.net/cordon_db")
   .then((res) => console.log("Connect to Atlas"))
   .catch((err) => console.log(err));
 
-app.post("/addAdmin", (req, res) => {
-  const { username, password, isSuperAdmin, createdAt } = req.body;
-  AdminModel.find({ username })
+const fs = require("fs");
 
+// Your existing route
+app.post("/addAdmin", upload.single("avatar"), (req, res) => {
+  const { username, password, isSuperAdmin, createdAt } = req.body;
+
+  AdminModel.find({ username })
     .then((account) => {
       if (account.length === 1) {
-        return res.json("Username Exist");
+        return res.json("Username Exists");
       } else {
-        let = encodePassword = base64.encode(password);
+        // Handle file upload
+        const file = req.file; // The uploaded file
+        let avatarBase64 = null;
+
+        if (file) {
+          const fileData = fs.readFileSync(file.path); // Read the file from the file system
+          avatarBase64 = fileData.toString("base64"); // Convert file data to Base64
+        }
+
+        // Encode password
+        const encodedPassword = base64.encode(password);
+        console.log("@@@@@@", file);
+
+        // Create the new admin
         AdminModel.create({
           username,
-          password: encodePassword,
+          password: encodedPassword,
           isSuperAdmin,
           isActive: 1,
           createdAt,
+          fileName: file.filename,
+          avatar: avatarBase64, // Save Base64 encoded avatar in the database
         }).then((result) => {
           res.json({
-            message: "Data Added",
+            message: "Admin Added",
+            data: result,
           });
         });
       }
     })
-    .catch((err) => res.json(err));
+    .catch((err) => res.status(500).json({ error: err.message }));
 });
 
 app.post("/save", (req, res) => {

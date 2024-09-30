@@ -6,6 +6,8 @@ const AdminSchema = new mongoose.Schema({
   isSuperAdmin: Number,
   isActive: Number,
   createdAt: String,
+  avatar: String,
+  fileName: String,
 });
 
 const AdminModel = mongoose.model("admins", AdminSchema);

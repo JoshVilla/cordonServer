@@ -10,54 +10,99 @@ app.use(express.json());
 
 const base64 = require("base-64");
 const upload = require("./middleware/upload");
-const PORT = process.env.port || 5000;
+const fs = require("fs");
+const PORT = process.env.PORT || 5000;
+const mega = require("mega");
+
+const megaEmail = process.env.MEGA_EMAIL;
+const megaPassword = process.env.MEGA_PASSWORD;
+
 mongoose
-  .connect("mongodb+srv://test:Test123@cluster0.y3kde2g.mongodb.net/cordon_db")
+  .connect(process.env.ATLAS_DB_LINK)
   .then((res) => console.log("Connect to Atlas"))
   .catch((err) => console.log(err));
 
-const fs = require("fs");
+const storage = mega({ email: megaEmail, password: megaPassword }, (error) => {
+  if (error) {
+    return console.error("Login failed:", error);
+  }
+  console.log("Logged into Mega.io");
+});
 
-// Your existing route
-app.post("/addAdmin", upload.single("avatar"), (req, res) => {
-  const { username, password, isSuperAdmin, createdAt } = req.body;
+function uploadImageToMega(filePath) {
+  return new Promise((resolve, reject) => {
+    console.log("Starting upload...");
 
-  AdminModel.find({ username })
-    .then((account) => {
-      if (account.length === 1) {
-        return res.json("Username Exists");
-      } else {
-        // Handle file upload
-        const file = req.file; // The uploaded file
-        let avatarBase64 = null;
+    const fileStream = fs.createReadStream(filePath);
+    const fileName = filePath.split("/").pop();
 
-        if (file) {
-          const fileData = fs.readFileSync(file.path); // Read the file from the file system
-          avatarBase64 = fileData.toString("base64"); // Convert file data to Base64
+    // Upload the image to Mega.io
+    storage.upload(
+      {
+        name: fileName,
+        size: fs.statSync(filePath).size,
+      },
+      fileStream,
+      (error, file) => {
+        if (error) {
+          console.error("Upload failed:", error);
+          reject(error);
+        } else {
+          console.log(`File uploaded: ${file.name}`);
+          console.log("Download URL:", file.link());
+          resolve(file.link()); // Resolve with the file link
         }
-
-        // Encode password
-        const encodedPassword = base64.encode(password);
-        console.log("@@@@@@", file);
-
-        // Create the new admin
-        AdminModel.create({
-          username,
-          password: encodedPassword,
-          isSuperAdmin,
-          isActive: 1,
-          createdAt,
-          fileName: file.filename,
-          avatar: avatarBase64, // Save Base64 encoded avatar in the database
-        }).then((result) => {
-          res.json({
-            message: "Admin Added",
-            data: result,
-          });
-        });
       }
-    })
-    .catch((err) => res.status(500).json({ error: err.message }));
+    );
+  });
+}
+
+app.post("/addAdmin", upload.single("avatar"), async (req, res) => {
+  try {
+    const { username, password, isSuperAdmin, createdAt } = req.body;
+
+    const account = await AdminModel.find({ username });
+    if (account.length === 1) {
+      return res.json("Username Exists");
+    } else {
+      // Handle file upload
+      const file = req.file; // The uploaded file
+      let avatarBase64 = null;
+      let megaFileUrl = null; // Store Mega upload URL
+
+      if (file) {
+        const fileData = fs.readFileSync(file.path); // Read the file from the file system
+        avatarBase64 = fileData.toString("base64"); // Convert file data to Base64
+
+        // Upload image to Mega.io
+        megaFileUrl = await uploadImageToMega(file.path); // Await Mega upload
+      }
+
+      // Encode password
+      const encodedPassword = base64.encode(password);
+
+      // Create the new admin in the database
+      const newAdmin = await AdminModel.create({
+        username,
+        password: encodedPassword,
+        isSuperAdmin,
+        isActive: 1,
+        createdAt,
+        fileName: file?.filename,
+        avatar: avatarBase64, // Save Base64 encoded avatar in the database
+        // avatarMegaLink: megaFileUrl, // Save Mega.io file link (optional)
+      });
+
+      // Send the response back with the created admin
+      return res.json({
+        message: "Admin Added",
+        data: newAdmin,
+      });
+    }
+  } catch (err) {
+    console.error("Error:", err);
+    return res.status(500).json({ error: err.message });
+  }
 });
 
 app.post("/save", (req, res) => {
@@ -217,4 +262,5 @@ app.post("/siteInfoUpdate", (req, res) => {
 
 app.listen(PORT, () => {
   console.log("Server Runnsding at " + PORT);
+  console.log(storage);
 });

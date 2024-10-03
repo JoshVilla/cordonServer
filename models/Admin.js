@@ -8,6 +8,7 @@ const AdminSchema = new mongoose.Schema({
   createdAt: String,
   avatar: String,
   fileName: String,
+  // avatarMegaLink: String,
 });
 
 const AdminModel = mongoose.model("admins", AdminSchema);

@@ -3,6 +3,9 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const AdminModel = require("./models/Admin");
 const SiteInfoModel = require("./models/SiteInfo");
+const cloudinary = require("./config/cloudinaryConfig");
+const { addAdmin } = require("./controllers/admin/AdminController");
+const { editAdmin } = require("./controllers/admin/EditController");
 require("dotenv").config();
 const app = express();
 app.use(cors());
@@ -11,135 +14,15 @@ app.use(express.json());
 const base64 = require("base-64");
 const upload = require("./middleware/upload");
 const fs = require("fs");
-const PORT = process.env.PORT || 5000;
-const mega = require("mega");
-
-const megaEmail = process.env.MEGA_EMAIL;
-const megaPassword = process.env.MEGA_PASSWORD;
-
+const PORT = process.env.PORT;
 mongoose
   .connect(process.env.ATLAS_DB_LINK)
   .then((res) => console.log("Connect to Atlas"))
   .catch((err) => console.log(err));
 
-const storage = mega({ email: megaEmail, password: megaPassword }, (error) => {
-  if (error) {
-    return console.error("Login failed:", error);
-  }
-  console.log("Logged into Mega.io");
-});
+app.post("/addAdmin", upload.single("avatar"), addAdmin);
 
-function uploadImageToMega(filePath) {
-  return new Promise((resolve, reject) => {
-    console.log("Starting upload...");
-
-    const fileStream = fs.createReadStream(filePath);
-    const fileName = filePath.split("/").pop();
-
-    // Upload the image to Mega.io
-    storage.upload(
-      {
-        name: fileName,
-        size: fs.statSync(filePath).size,
-      },
-      fileStream,
-      (error, file) => {
-        if (error) {
-          console.error("Upload failed:", error);
-          reject(error);
-        } else {
-          console.log(`File uploaded: ${file.name}`);
-          console.log("Download URL:", file.link());
-          resolve(file.link()); // Resolve with the file link
-        }
-      }
-    );
-  });
-}
-
-app.post("/addAdmin", upload.single("avatar"), async (req, res) => {
-  try {
-    const { username, password, isSuperAdmin, createdAt } = req.body;
-
-    const account = await AdminModel.find({ username });
-    if (account.length === 1) {
-      return res.json("Username Exists");
-    } else {
-      // Handle file upload
-      const file = req.file; // The uploaded file
-      let avatarBase64 = null;
-      let megaFileUrl = null; // Store Mega upload URL
-
-      if (file) {
-        const fileData = fs.readFileSync(file.path); // Read the file from the file system
-        avatarBase64 = fileData.toString("base64"); // Convert file data to Base64
-
-        // Upload image to Mega.io
-        megaFileUrl = await uploadImageToMega(file.path); // Await Mega upload
-      }
-
-      // Encode password
-      const encodedPassword = base64.encode(password);
-
-      // Create the new admin in the database
-      const newAdmin = await AdminModel.create({
-        username,
-        password: encodedPassword,
-        isSuperAdmin,
-        isActive: 1,
-        createdAt,
-        fileName: file?.filename,
-        avatar: avatarBase64, // Save Base64 encoded avatar in the database
-        // avatarMegaLink: megaFileUrl, // Save Mega.io file link (optional)
-      });
-
-      // Send the response back with the created admin
-      return res.json({
-        message: "Admin Added",
-        data: newAdmin,
-      });
-    }
-  } catch (err) {
-    console.error("Error:", err);
-    return res.status(500).json({ error: err.message });
-  }
-});
-
-app.post("/save", (req, res) => {
-  const { id, username, password, isSuperAdmin } = req.body;
-
-  if (!id) {
-    return res.status(400).json({ message: "Admin ID is required" });
-  }
-
-  // Create the update data object
-  let newAdminData = {};
-  if (username) newAdminData.username = username;
-  if (password) newAdminData.password = base64.encode(password);
-  if (isSuperAdmin !== undefined) newAdminData.isSuperAdmin = isSuperAdmin;
-
-  // Update the admin by ID
-  AdminModel.findByIdAndUpdate(
-    id, // The document's _id (not an object)
-    newAdminData, // The fields to update
-    { new: true, runValidators: true } // Return the updated document and run schema validations
-  )
-    .then((result) => {
-      if (!result) {
-        return res.status(404).json({ message: "Admin not found", id });
-      }
-      res.status(200).json({
-        message: "Admin updated successfully",
-        admin: result, // Return the updated admin data
-      });
-    })
-    .catch((err) => {
-      console.error(err);
-      res
-        .status(500)
-        .json({ message: "Error updating admin", error: err.message });
-    });
-});
+app.post("/save", editAdmin);
 
 app.post("/get", (req, res) => {
   // Initialize the query object
@@ -199,6 +82,18 @@ app.post("/login", (req, res) => {
 
 app.post("/delete", (req, res) => {
   const { _id } = req.body;
+
+  const deleteImageFromCloudinary = async (_id) => {
+    await AdminModel.findById(_id).then((result) => {
+      console.log(result, "@@@@@");
+      const splitted = result?.avatar?.split("/");
+      const public = `${splitted[7]}/${splitted[8]}`;
+      const publicId = public.replace(".png", "");
+      cloudinary.uploader.destroy(publicId);
+    });
+  };
+
+  deleteImageFromCloudinary(_id);
   AdminModel.findByIdAndDelete(_id)
     .then((result) => {
       res.json({ message: "Data Deleted" });
@@ -261,6 +156,5 @@ app.post("/siteInfoUpdate", (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log("Server Runnsding at " + PORT);
-  console.log(storage);
+  console.log("Server Running at " + PORT);
 });

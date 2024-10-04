@@ -1,3 +1,5 @@
+const AdminModel = require("../../models/Admin");
+const base64 = require("base-64");
 const editAdmin = (req, res) => {
   const { id, username, password, isSuperAdmin } = req.body;
 
@@ -10,6 +12,10 @@ const editAdmin = (req, res) => {
   if (username) newAdminData.username = username;
   if (password) newAdminData.password = base64.encode(password);
   if (isSuperAdmin !== undefined) newAdminData.isSuperAdmin = isSuperAdmin;
+
+  AdminModel.findById(id).then((result) => {
+    console.log(result.publicId, "@@@RESULT");
+  });
 
   // Update the admin by ID
   AdminModel.findByIdAndUpdate(

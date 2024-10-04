@@ -5,11 +5,14 @@ const multer = require("multer");
 const path = require("path");
 
 const getPublicIdForCloudinary = (file) => {
-  const splitted = file.split("/");
-  const public = `${splitted[7]}/${splitted[8]}`;
-  const publicId = public.replace(".png", "");
+  if (file) {
+    const splitted = file?.split("/");
+    const public = `${splitted[7]}/${splitted[8]}`;
+    const publicId = public.replace(".png", "");
 
-  return publicId;
+    return publicId;
+  }
+  return "";
 };
 
 // Set up multer for file handling
@@ -49,7 +52,7 @@ const addAdmin = async (req, res) => {
             folder: "admin_avatars",
           })
         ).secure_url
-      : null;
+      : "";
 
     // Create the new admin account
     const newAdmin = await AdminModel.create({

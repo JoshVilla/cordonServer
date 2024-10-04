@@ -3,19 +3,20 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const AdminModel = require("./models/Admin");
 const SiteInfoModel = require("./models/SiteInfo");
-const cloudinary = require("./config/cloudinaryConfig");
 const { addAdmin } = require("./controllers/admin/AdminController");
 const { editAdmin } = require("./controllers/admin/EditController");
 const { deleteAdmin } = require("./controllers/admin/DeleteController");
+const { getAdmin } = require("./controllers/admin/GetController");
+const { login } = require("./controllers/login/LoginController");
+const cloudinary = require("./config/cloudinaryConfig");
 require("dotenv").config();
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-const base64 = require("base-64");
 const upload = require("./middleware/upload");
-const fs = require("fs");
 const PORT = process.env.PORT;
+
 mongoose
   .connect(process.env.ATLAS_DB_LINK)
   .then((res) => console.log("Connect to Atlas"))
@@ -25,59 +26,11 @@ app.post("/addAdmin", upload.single("avatar"), addAdmin);
 
 app.post("/save", editAdmin);
 
-app.post("/get", (req, res) => {
-  // Initialize the query object
-  let query = {};
-
-  // Dynamically add filters if they exist
-  if (req.body.username) query.username = req.body.username;
-  if (req.body.isSuperAdmin) query.isSuperAdmin = req.body.isSuperAdmin;
-  if (req.body.isActive) query.isActive = req.body.isActive;
-
-  // Date range filter (assuming createdAt is the date field)
-  if (req.body.startDate || req.body.endDate) {
-    query.createdAt = {};
-    if (req.body.startDate) query.createdAt.$gte = new Date(req.body.startDate); // Greater than or equal to start date
-    if (req.body.endDate) query.createdAt.$lte = new Date(req.body.endDate); // Less than or equal to end date
-  }
-
-  AdminModel.find(query)
-    .then((result) => {
-      console.log("Result from database:", result);
-      res.json(result);
-    })
-    .catch((err) => {
-      console.error("Error during database query:", err);
-      res.json(err);
-    });
-});
-
-app.post("/login", (req, res) => {
-  const { username, password } = req.body;
-
-  // Find user by username
-  AdminModel.findOne({ username })
-    .then((admin) => {
-      // Check if user exists
-      if (!admin) {
-        return res.status(404).json({ message: "User not found" });
-      }
-
-      // Compare passwords (plain-text, no bcrypt)
-      if (base64.decode(admin.password) !== password) {
-        return res.status(400).json({ message: "Invalid credentials" });
-      }
-
-      // If username and password match, send success response
-      return res.json({ message: "Logged In", data: admin });
-    })
-    .catch((err) => {
-      // Handle any errors that occur during the database query
-      return res.status(500).json({ error: "Server error", details: err });
-    });
-});
+app.post("/get", getAdmin);
 
 app.post("/delete", deleteAdmin);
+
+app.post("/login", login);
 
 app.post("/update", (req, res) => {
   const { _id, username, password } = req.body;
@@ -100,9 +53,20 @@ app.get("/siteInfo", (req, res) => {
     });
 });
 
-app.post("/siteInfoUpdate", (req, res) => {
+app.post("/siteInfoUpdate", async (req, res) => {
   const { id, title, address, accounts, vision, mission } = req.body;
   let params = {};
+
+  const getPublicIdForCloudinary = (file) => {
+    if (file) {
+      const splitted = file?.split("/");
+      const public = `${splitted[7]}/${splitted[8]}`;
+      const publicId = public.replace(".png", "");
+
+      return publicId;
+    }
+    return "";
+  };
 
   if (title) params.title = title;
   if (address) params.address = address;
@@ -115,12 +79,30 @@ app.post("/siteInfoUpdate", (req, res) => {
     if (accounts.twitter) params.accounts.twitter = accounts.twitter;
     if (accounts.tiktok) params.accounts.tiktok = accounts.tiktok;
   }
+  console.log(req.file, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+
+  // If an avatar was uploaded, upload it to Cloudinary
+  const avatarUrl = req.file
+    ? (
+        await cloudinary.uploader.upload(req.file.path, {
+          folder: "admin_avatars",
+        })
+      ).secure_url
+    : "";
 
   // Update the document by ID
-  SiteInfoModel.findByIdAndUpdate(id, params, {
-    new: true, // Return the updated document
-    runValidators: true, // Ensure validation rules are applied
-  })
+  SiteInfoModel.findByIdAndUpdate(
+    id,
+    {
+      ...params,
+      avatar: avatarUrl,
+      publicId: getPublicIdForCloudinary(avatarUrl),
+    },
+    {
+      new: true, // Return the updated document
+      runValidators: true, // Ensure validation rules are applied
+    }
+  )
     .then((result) => {
       if (!result) {
         return res.status(404).json({ error: "Document not found" });

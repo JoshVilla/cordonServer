@@ -53,7 +53,7 @@ app.get("/siteInfo", (req, res) => {
     });
 });
 
-app.post("/siteInfoUpdate", async (req, res) => {
+app.post("/siteInfoUpdate", upload.single("logo"), async (req, res) => {
   const { id, title, address, accounts, vision, mission } = req.body;
   let params = {};
 
@@ -79,7 +79,7 @@ app.post("/siteInfoUpdate", async (req, res) => {
     if (accounts.twitter) params.accounts.twitter = accounts.twitter;
     if (accounts.tiktok) params.accounts.tiktok = accounts.tiktok;
   }
-  console.log(req.file, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+  console.log(req.body, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 
   // If an avatar was uploaded, upload it to Cloudinary
   const avatarUrl = req.file
@@ -95,8 +95,10 @@ app.post("/siteInfoUpdate", async (req, res) => {
     id,
     {
       ...params,
-      avatar: avatarUrl,
-      publicId: getPublicIdForCloudinary(avatarUrl),
+      ...(avatarUrl && {
+        logo: avatarUrl,
+        logoPublicId: getPublicIdForCloudinary(avatarUrl),
+      }),
     },
     {
       new: true, // Return the updated document

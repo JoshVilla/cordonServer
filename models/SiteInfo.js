@@ -6,8 +6,8 @@ const SiteInfoSchema = new mongoose.Schema({
   mission: String,
   vision: String,
   accounts: {},
-  publicId: String,
-  avatar: String,
+  logoPublicId: String,
+  logo: String,
 });
 
 const SiteInfoModel = mongoose.model("site_informations", SiteInfoSchema);

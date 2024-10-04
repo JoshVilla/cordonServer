@@ -6,6 +6,7 @@ const SiteInfoModel = require("./models/SiteInfo");
 const cloudinary = require("./config/cloudinaryConfig");
 const { addAdmin } = require("./controllers/admin/AdminController");
 const { editAdmin } = require("./controllers/admin/EditController");
+const { deleteAdmin } = require("./controllers/admin/DeleteController");
 require("dotenv").config();
 const app = express();
 app.use(cors());
@@ -39,10 +40,6 @@ app.post("/get", (req, res) => {
     if (req.body.startDate) query.createdAt.$gte = new Date(req.body.startDate); // Greater than or equal to start date
     if (req.body.endDate) query.createdAt.$lte = new Date(req.body.endDate); // Less than or equal to end date
   }
-
-  // Debugging output
-  console.log("Query parameters received:", req.body);
-  console.log("Built query object:", query);
 
   AdminModel.find(query)
     .then((result) => {
@@ -80,26 +77,7 @@ app.post("/login", (req, res) => {
     });
 });
 
-app.post("/delete", (req, res) => {
-  const { _id } = req.body;
-
-  const deleteImageFromCloudinary = async (_id) => {
-    await AdminModel.findById(_id).then((result) => {
-      console.log(result, "@@@@@");
-      const splitted = result?.avatar?.split("/");
-      const public = `${splitted[7]}/${splitted[8]}`;
-      const publicId = public.replace(".png", "");
-      cloudinary.uploader.destroy(publicId);
-    });
-  };
-
-  deleteImageFromCloudinary(_id);
-  AdminModel.findByIdAndDelete(_id)
-    .then((result) => {
-      res.json({ message: "Data Deleted" });
-    })
-    .catch((err) => res.json(err));
-});
+app.post("/delete", deleteAdmin);
 
 app.post("/update", (req, res) => {
   const { _id, username, password } = req.body;

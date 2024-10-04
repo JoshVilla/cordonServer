@@ -4,6 +4,14 @@ const base64 = require("base-64");
 const multer = require("multer");
 const path = require("path");
 
+const getPublicIdForCloudinary = (file) => {
+  const splitted = file.split("/");
+  const public = `${splitted[7]}/${splitted[8]}`;
+  const publicId = public.replace(".png", "");
+
+  return publicId;
+};
+
 // Set up multer for file handling
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -50,7 +58,7 @@ const addAdmin = async (req, res) => {
       isSuperAdmin,
       isActive: 1,
       createdAt,
-      fileName: req.file?.filename,
+      publicId: getPublicIdForCloudinary(avatarUrl),
       avatar: avatarUrl,
     });
 

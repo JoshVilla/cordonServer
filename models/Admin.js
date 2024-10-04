@@ -7,7 +7,7 @@ const AdminSchema = new mongoose.Schema({
   isActive: Number,
   createdAt: String,
   avatar: String,
-  fileName: String,
+  publicId: String,
   // avatarMegaLink: String,
 });
 

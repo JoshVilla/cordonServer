@@ -1,20 +1,46 @@
 const AdminModel = require("../../models/Admin");
+const cloudinary = require("../../config/cloudinaryConfig");
 const base64 = require("base-64");
-const editAdmin = (req, res) => {
+const editAdmin = async (req, res) => {
   const { id, username, password, isSuperAdmin } = req.body;
 
   if (!id) {
     return res.status(400).json({ message: "Admin ID is required" });
   }
 
+  const getPublicIdForCloudinary = (file) => {
+    if (file) {
+      const splitted = file?.split("/");
+      const public = `${splitted[7]}/${splitted[8]}`;
+      const publicId = public.replace(".png", "");
+
+      return publicId;
+    }
+    return "";
+  };
+
+  const avatarUrl = req.file
+    ? (
+        await cloudinary.uploader.upload(req.file.path, {
+          folder: "admin_avatars",
+        })
+      ).secure_url
+    : "";
+
   // Create the update data object
   let newAdminData = {};
   if (username) newAdminData.username = username;
   if (password) newAdminData.password = base64.encode(password);
   if (isSuperAdmin !== undefined) newAdminData.isSuperAdmin = isSuperAdmin;
+  if (req.file) {
+    newAdminData.avatar = avatarUrl;
+    newAdminData.publicId = getPublicIdForCloudinary(avatarUrl);
+  }
 
   AdminModel.findById(id).then((result) => {
-    console.log(result.publicId, "@@@RESULT");
+    if (result.publicId) {
+      cloudinary.uploader.destroy(result.publicId);
+    }
   });
 
   // Update the admin by ID

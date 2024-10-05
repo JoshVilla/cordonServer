@@ -17,7 +17,7 @@ const getAdmin = (req, res) => {
 
   AdminModel.find(query)
     .then((result) => {
-      console.log("Result from database:", result);
+      // console.log("Result from database:", result);
       res.json(result);
     })
     .catch((err) => {

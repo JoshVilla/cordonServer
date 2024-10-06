@@ -1,10 +1,6 @@
 const mongoose = require("mongoose");
 
 const HighlightSchema = new mongoose.Schema({
-  id: {
-    type: String,
-    required: true,
-  },
   sorted: {
     type: Number,
     required: true,

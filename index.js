@@ -18,6 +18,10 @@ const upload = require("./middleware/upload");
 const { updateSiteInfo } = require("./controllers/siteInfo/UpdateController");
 const { getSiteInfo } = require("./controllers/siteInfo/GetController");
 const { getHomepageInfo } = require("./controllers/homepage/GetController");
+const { updateHomePageInfo } = require("./controllers/homepage/AddController");
+const {
+  deleteHomePageInfo,
+} = require("./controllers/homepage/DeleteController");
 const PORT = process.env.PORT;
 
 mongoose
@@ -51,7 +55,9 @@ app.post("/siteInfoUpdate", upload.single("logo"), updateSiteInfo);
 
 app.get("/homepageInfo", getHomepageInfo);
 
-app.post("/updateHomePageInfo", upload.single("image"), updateSiteInfo);
+app.post("/updateHomePageInfo", upload.single("image"), updateHomePageInfo);
+
+app.post("/deleteHomePageInfo", deleteHomePageInfo);
 
 app.listen(PORT, () => {
   console.log("Server Running at " + PORT);

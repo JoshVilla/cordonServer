@@ -8,6 +8,8 @@ const SiteInfoSchema = new mongoose.Schema({
   accounts: {},
   logoPublicId: String,
   logo: String,
+  email: String,
+  contactNumber: String,
 });
 
 const SiteInfoModel = mongoose.model("site_informations", SiteInfoSchema);

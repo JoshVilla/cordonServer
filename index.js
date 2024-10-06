@@ -24,6 +24,8 @@ mongoose
   .then((res) => console.log("Connect to Atlas"))
   .catch((err) => console.log(err));
 
+//Admin Management
+
 app.post("/addAdmin", upload.single("avatar"), addAdmin);
 
 app.post("/save", upload.single("avatar"), editAdmin);
@@ -32,7 +34,11 @@ app.post("/get", getAdmin);
 
 app.post("/delete", deleteAdmin);
 
+//Login
+
 app.post("/login", login);
+
+//Site Management
 
 app.get("/siteInfo", getSiteInfo);
 

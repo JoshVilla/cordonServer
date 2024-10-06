@@ -10,7 +10,16 @@ const deletePreviousImage = (_id) => {
 };
 
 const updateSiteInfo = async (req, res) => {
-  const { id, title, address, accounts, vision, mission } = req.body;
+  const {
+    id,
+    title,
+    address,
+    accounts,
+    vision,
+    mission,
+    email,
+    contactNumber,
+  } = req.body;
   let params = {};
   let parsedAccounts = JSON.parse(accounts);
   const getPublicIdForCloudinary = (file) => {
@@ -28,6 +37,8 @@ const updateSiteInfo = async (req, res) => {
   if (address) params.address = address;
   if (vision) params.vision = vision;
   if (mission) params.mission = mission;
+  if (email) params.email = email;
+  if (contactNumber) params.contactNumber = contactNumber;
 
   if (parsedAccounts) {
     params.accounts = {};

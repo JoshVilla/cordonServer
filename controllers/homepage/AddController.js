@@ -1,7 +1,7 @@
 const cloudinary = require("../../config/cloudinaryConfig");
 const HomepageModel = require("../../models/Homepage");
 
-const updateHomePageInfo = async (req, res) => {
+const addHomePageInfo = async (req, res) => {
   const { section, sorted, display, title, content } = req.body;
 
   const avatarUrl = req.file
@@ -22,7 +22,7 @@ const updateHomePageInfo = async (req, res) => {
     }
     return "";
   };
-  const updatedHighlight = {
+  const newData = {
     section,
     display,
     sorted,
@@ -36,7 +36,7 @@ const updateHomePageInfo = async (req, res) => {
     HomepageModel.findByIdAndUpdate(
       "67027185ee9f3ce34598e2c4",
       {
-        $push: { [section]: updatedHighlight }, // Add new highlight
+        $push: { [section]: newData }, // Add new highlight
       },
       { new: true }
     )
@@ -47,4 +47,4 @@ const updateHomePageInfo = async (req, res) => {
   }
 };
 
-module.exports = { updateHomePageInfo };
+module.exports = { addHomePageInfo };

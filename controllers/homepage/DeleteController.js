@@ -1,17 +1,13 @@
 const HomepageModel = require("../../models/Homepage");
+const cloudinary = require("../../config/cloudinaryConfig");
 
 const deleteHomePageInfo = async (req, res) => {
-  const { id, section, idSectionData } = req.body;
+  const { id, section, idSectionData, imagePublicId } = req.body;
 
-  const deleteImageFromCloudinary = async (_id) => {
-    await HomepageModel.findById(id, {
-      [section]: { _id: idSectionData },
-    }).then((result) => {
-      // cloudinary.uploader.destroy(result?.imagePublicId);
-      console.log(result);
-    });
+  const deleteImageFromCloudinary = async (imagePublicId) => {
+    cloudinary.uploader.destroy(imagePublicId);
   };
-  deleteImageFromCloudinary();
+  deleteImageFromCloudinary(imagePublicId);
   if (section === "highlights") {
     HomepageModel.findByIdAndUpdate(id, {
       $pull: { [section]: { _id: idSectionData } },

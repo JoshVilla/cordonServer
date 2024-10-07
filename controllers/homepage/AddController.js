@@ -2,7 +2,8 @@ const cloudinary = require("../../config/cloudinaryConfig");
 const HomepageModel = require("../../models/Homepage");
 
 const updateHomePageInfo = async (req, res) => {
-  const { section, data, id } = req.body;
+  const { section, sorted, display, title, content, id } = req.body;
+  console.log(req.body, req.file, "@@@@@@@@@@@@@data@@@@@@@@@@@@");
 
   const avatarUrl = req.file
     ? (
@@ -23,7 +24,11 @@ const updateHomePageInfo = async (req, res) => {
     return "";
   };
   const updatedHighlight = {
-    ...data,
+    section,
+    display,
+    sorted,
+    title,
+    content,
     image: avatarUrl,
     imagePublicId: getPublicIdForCloudinary(avatarUrl),
   };

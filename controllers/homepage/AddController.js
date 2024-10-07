@@ -2,8 +2,7 @@ const cloudinary = require("../../config/cloudinaryConfig");
 const HomepageModel = require("../../models/Homepage");
 
 const updateHomePageInfo = async (req, res) => {
-  const { section, sorted, display, title, content, id } = req.body;
-  console.log(req.body, req.file, "@@@@@@@@@@@@@data@@@@@@@@@@@@");
+  const { section, sorted, display, title, content } = req.body;
 
   const avatarUrl = req.file
     ? (
@@ -35,7 +34,7 @@ const updateHomePageInfo = async (req, res) => {
 
   if (section === "highlights") {
     HomepageModel.findByIdAndUpdate(
-      id,
+      "67027185ee9f3ce34598e2c4",
       {
         $push: { [section]: updatedHighlight }, // Add new highlight
       },

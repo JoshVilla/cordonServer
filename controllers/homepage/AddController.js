@@ -2,12 +2,13 @@ const cloudinary = require("../../config/cloudinaryConfig");
 const HomepageModel = require("../../models/Homepage");
 
 const addHomePageInfo = async (req, res) => {
-  const { section, sorted, display, title, content } = req.body;
+  const { section, sorted, display, title, content, hotline_1, hotline_2 } =
+    req.body;
 
   const avatarUrl = req.file
     ? (
         await cloudinary.uploader.upload(req.file.path, {
-          folder: "admin_highlights",
+          folder: `admin_highlights`,
         })
       ).secure_url
     : "";
@@ -22,7 +23,7 @@ const addHomePageInfo = async (req, res) => {
     }
     return "";
   };
-  const newData = {
+  const newHighlightData = {
     section,
     display,
     sorted,
@@ -32,11 +33,31 @@ const addHomePageInfo = async (req, res) => {
     imagePublicId: getPublicIdForCloudinary(avatarUrl),
   };
 
+  const newHotlineData = {
+    image: avatarUrl,
+    imagePublicId: getPublicIdForCloudinary(avatarUrl),
+    hotline_1,
+    hotline_2,
+    title,
+  };
+
   if (section === "highlights") {
     HomepageModel.findByIdAndUpdate(
       "67027185ee9f3ce34598e2c4",
       {
-        $push: { [section]: newData }, // Add new highlight
+        $push: { [section]: newHighlightData }, // Add new highlight
+      },
+      { new: true }
+    )
+      .then((result) => {
+        res.json("Added");
+      })
+      .catch((err) => res.json(err));
+  } else if (section === "hotlines") {
+    HomepageModel.findByIdAndUpdate(
+      "67027185ee9f3ce34598e2c4",
+      {
+        $push: { [section]: newHotlineData }, // Add new highlight
       },
       { new: true }
     )

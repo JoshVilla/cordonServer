@@ -3,7 +3,17 @@ const cloudinary = require("../../config/cloudinaryConfig");
 const mongoose = require("mongoose");
 
 const updateHomePageInfo = async (req, res) => {
-  const { section, sorted, display, title, content, highlightsId } = req.body;
+  const {
+    section,
+    sorted,
+    display,
+    title,
+    content,
+    highlightsId,
+    hotlinesId,
+    hotline_1,
+    hotline_2,
+  } = req.body;
 
   try {
     // Upload new image if present
@@ -37,6 +47,8 @@ const updateHomePageInfo = async (req, res) => {
       sorted,
       title,
       content,
+      hotline_1,
+      hotline_2,
     };
 
     // If a new image is uploaded, add image and imagePublicId to updated data
@@ -83,6 +95,35 @@ const updateHomePageInfo = async (req, res) => {
           .json({ message: "Highlight updated successfully" });
       } else {
         return res.status(404).json({ message: "Highlight not found" });
+      }
+    } else if (section === "hotlines") {
+      const result = await HomepageModel.updateOne(
+        {
+          _id: "67027185ee9f3ce34598e2c4", // Ensure main document's _id is ObjectId
+          "hotlines._id": hotlinesId,
+        },
+        {
+          $set: {
+            "hotlines.$.title": title,
+            "hotlines.$.hotline_1": hotline_1,
+            "hotlines.$.hotline_2": hotline_2,
+            ...(avatarUrl && {
+              "hotlines.$.image": avatarUrl,
+              "hotlines.$.imagePublicId": updatedData.imagePublicId,
+            }),
+          },
+        }
+      );
+      // Log the result of the update operation
+      console.log("Update result:", result);
+
+      // Check if any document was updated
+      if (result.modifiedCount > 0) {
+        return res
+          .status(200)
+          .json({ message: "Hotlines updated successfully" });
+      } else {
+        return res.status(404).json({ message: "Hotlines not found" });
       }
     } else {
       return res.status(400).json({ message: "Invalid section" });

@@ -27,8 +27,32 @@ const HighlightSchema = new mongoose.Schema({
   },
 });
 
+const HotlineSchema = new mongoose.Schema({
+  image: {
+    type: String,
+    required: true,
+  },
+  imagePublicId: {
+    type: String,
+    required: true,
+  },
+  hotline_1: {
+    type: String,
+    required: true,
+  },
+  hotline_2: {
+    type: String,
+    required: true,
+  },
+  title: {
+    type: String,
+    required: true,
+  },
+});
+
 const HomepageSchema = new mongoose.Schema({
   highlights: [HighlightSchema],
+  hotlines: [HotlineSchema],
 });
 
 const HomepageModel = mongoose.model("homepage_dbs", HomepageSchema);

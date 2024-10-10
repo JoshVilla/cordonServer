@@ -50,7 +50,7 @@ const addHomePageInfo = async (req, res) => {
       { new: true }
     )
       .then((result) => {
-        res.json("Added");
+        res.json("Added Successfully");
       })
       .catch((err) => res.json(err));
   } else if (section === "hotlines") {
@@ -62,7 +62,7 @@ const addHomePageInfo = async (req, res) => {
       { new: true }
     )
       .then((result) => {
-        res.json("Added");
+        res.json("Added Successfully");
       })
       .catch((err) => res.json(err));
   }

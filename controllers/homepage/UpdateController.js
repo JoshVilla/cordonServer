@@ -121,7 +121,7 @@ const updateHomePageInfo = async (req, res) => {
       if (result.modifiedCount > 0) {
         return res
           .status(200)
-          .json({ message: "Hotlines updated successfully" });
+          .json({ message: "Hotline updated successfully" });
       } else {
         return res.status(404).json({ message: "Hotlines not found" });
       }

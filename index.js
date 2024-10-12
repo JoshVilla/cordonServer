@@ -25,6 +25,8 @@ const {
 const {
   updateHomePageInfo,
 } = require("./controllers/homepage/UpdateController");
+
+const { getTopStories } = require("./controllers/topStories/GetController");
 const PORT = process.env.PORT;
 
 mongoose
@@ -63,6 +65,9 @@ app.post("/addHomePageInfo", upload.single("image"), addHomePageInfo);
 app.post("/deleteHomePageInfo", deleteHomePageInfo);
 
 app.post("/updateHomepageInfo", upload.single("image"), updateHomePageInfo);
+
+// Top Stories
+app.get("/topStoriesInfo", getTopStories);
 
 app.listen(PORT, () => {
   console.log("Server Running at " + PORT);

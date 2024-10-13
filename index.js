@@ -13,6 +13,7 @@ require("dotenv").config();
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 const upload = require("./middleware/upload");
 const { updateSiteInfo } = require("./controllers/siteInfo/UpdateController");
@@ -27,6 +28,7 @@ const {
 } = require("./controllers/homepage/UpdateController");
 
 const { getTopStories } = require("./controllers/topStories/GetController");
+const { addStory } = require("./controllers/topStories/AddController");
 const PORT = process.env.PORT;
 
 mongoose
@@ -68,6 +70,8 @@ app.post("/updateHomepageInfo", upload.single("image"), updateHomePageInfo);
 
 // Top Stories
 app.get("/topStoriesInfo", getTopStories);
+
+app.post("/addStory", upload.single("thumbnail"), addStory);
 
 app.listen(PORT, () => {
   console.log("Server Running at " + PORT);

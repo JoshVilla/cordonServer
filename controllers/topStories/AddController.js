@@ -5,18 +5,13 @@ const addStory = async (req, res) => {
   try {
     const { title, thumbnail, items } = req.body;
 
-    // Parse thumbnail and items if they are stringified
-    const parsedThumbnail = JSON.parse(thumbnail);
     const parsedItems = JSON.parse(items);
 
-    // Extract the actual file object from parsedThumbnail
-    const originFileObj = parsedThumbnail.file.originFileObj;
-
     // Upload the file to Cloudinary if it exists
-    const imageUrl = originFileObj
+    const imageUrl = req.file
       ? (
-          await cloudinary.uploader.upload(originFileObj.path, {
-            folder: "admin_stories",
+          await cloudinary.uploader.upload(req.file.path, {
+            folder: "admin_avatars",
           })
         ).secure_url
       : "";

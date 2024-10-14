@@ -1,6 +1,5 @@
 const HomepageModel = require("../../models/Homepage");
 const cloudinary = require("../../config/cloudinaryConfig");
-const mongoose = require("mongoose");
 
 const updateHomePageInfo = async (req, res) => {
   const {

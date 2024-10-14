@@ -35,7 +35,7 @@ const addStory = async (req, res) => {
       title,
       thumbnail: imageUrl,
       thumbnailPublicId: getPublicIdForCloudinary(imageUrl),
-      items: parsedItems, // Items will now be an array of objects
+      content: parsedItems, // Items will now be an array of objects
     };
 
     console.log(params);

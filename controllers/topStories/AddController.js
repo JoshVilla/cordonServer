@@ -6,15 +6,21 @@ const addStory = async (req, res) => {
     const { title, thumbnail, items } = req.body;
 
     const parsedItems = JSON.parse(items);
+    console.log(req.files);
 
     // Upload the file to Cloudinary if it exists
-    const imageUrl = req.file
-      ? (
-          await cloudinary.uploader.upload(req.file.path, {
-            folder: "admin_avatars",
-          })
-        ).secure_url
-      : "";
+    if (req.files?.thumbnail && req.files.thumbnail[0]) {
+      const thumbnailFile = req.files.thumbnail[0]; // Access the first file in thumbnail array
+      const uploadResult = await cloudinary.uploader.upload(
+        thumbnailFile.path,
+        {
+          folder: "admin_stories",
+        }
+      );
+      imageUrl = uploadResult.secure_url;
+    }
+
+    console.log(imageUrl);
 
     const getPublicIdForCloudinary = (fileUrl) => {
       if (fileUrl) {

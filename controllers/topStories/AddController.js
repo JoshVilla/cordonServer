@@ -7,14 +7,14 @@ const addStory = async (req, res) => {
     const { title, items } = req.body;
 
     // Ensure `items` is properly parsed if it's sent as a JSON string
-    // const parsedItems = typeof items === "string" ? JSON.parse(items) : items;
-    // console.log("Parsed Items:", parsedItems);
+    const parsedItems = typeof items === "string" ? JSON.parse(items) : items;
+    console.log("Parsed Items:", parsedItems);
 
     let imageUrl = ""; // Placeholder for the thumbnail URL
 
     // Upload the file to Cloudinary if it exists
     // const uploadedItems = await Promise.all(
-    //   parsedItems.map(async (item) => {
+    //   parsedItems.map(async (item, index) => {
     //     if (item.type === "image" && req.files[`items[${index}].image`]) {
     //       const imageUpload = await cloudinary.uploader.upload(
     //         req.files[`items[${index}].image`][0].path,
@@ -25,12 +25,19 @@ const addStory = async (req, res) => {
     //     return item;
     //   })
     // );
-
+    const thumbnailUrl = req.file
+      ? (
+          await cloudinary.uploader.upload(req.file.path, {
+            folder: `admin_stories`,
+          })
+        ).secure_url
+      : "";
     const getPublicIdForCloudinary = (fileUrl) => {
       if (fileUrl) {
         const splitted = fileUrl.split("/");
         const publicPart = `${splitted[7]}/${splitted[8]}`;
-        const publicId = publicPart.replace(".png", "");
+        // Remove the file extension by splitting at the last dot (.)
+        const publicId = publicPart.substring(0, publicPart.lastIndexOf("."));
         return publicId;
       }
       return "";
@@ -38,15 +45,15 @@ const addStory = async (req, res) => {
 
     const params = {
       title,
-      thumbnail: imageUrl,
-      thumbnailPublicId: getPublicIdForCloudinary(imageUrl),
-      content: [], // Parsed items should now be an array of objects
+      thumbnail: thumbnailUrl,
+      thumbnailPublicId: getPublicIdForCloudinary(thumbnailUrl),
+      content: items, // Parsed and uploaded items should now be an array of objects
     };
 
     console.log("Params:", params);
 
     // Save the story to the database
-    // await TopStoriesModel.create(params);
+    await TopStoriesModel.create(params);
 
     // Send a success response
     return res

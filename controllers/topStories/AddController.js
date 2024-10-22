@@ -10,21 +10,6 @@ const addStory = async (req, res) => {
     const parsedItems = typeof items === "string" ? JSON.parse(items) : items;
     console.log("Parsed Items:", parsedItems);
 
-    let imageUrl = ""; // Placeholder for the thumbnail URL
-
-    // Upload the file to Cloudinary if it exists
-    // const uploadedItems = await Promise.all(
-    //   parsedItems.map(async (item, index) => {
-    //     if (item.type === "image" && req.files[`items[${index}].image`]) {
-    //       const imageUpload = await cloudinary.uploader.upload(
-    //         req.files[`items[${index}].image`][0].path,
-    //         { folder: "admin_stories" }
-    //       );
-    //       return { ...item, image: imageUpload.secure_url };
-    //     }
-    //     return item;
-    //   })
-    // );
     const thumbnailUrl = req.file
       ? (
           await cloudinary.uploader.upload(req.file.path, {

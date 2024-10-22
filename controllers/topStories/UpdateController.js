@@ -1,10 +1,10 @@
 const TopStoriesModel = require("../../models/TopStories");
 const cloudinary = require("../../config/cloudinaryConfig");
+const { deleteImageFromCloudinary } = require("../../utils/helpers");
 
 const updateStory = async (req, res) => {
   try {
-    const { id, title, items } = req.body;
-    console.log(id);
+    const { id, title, items, currentThumbnailPublicId } = req.body;
     const parsedItems = typeof items === "string" ? JSON.parse(items) : items;
     console.log("Parsed Items:", parsedItems);
 
@@ -37,6 +37,7 @@ const updateStory = async (req, res) => {
       return "";
     }
 
+    id && req.file ? deleteImageFromCloudinary(currentThumbnailPublicId) : null;
     // Prepare the parameters for the story update
     const storyData = {
       title,

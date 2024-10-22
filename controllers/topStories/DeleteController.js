@@ -1,13 +1,12 @@
 const TopStoriesModel = require("../../models/TopStories");
 const cloudinary = require("../../config/cloudinaryConfig");
-
+const { deleteImageFromCloudinary } = require("../../utils/helpers");
 const deleteStory = async (req, res) => {
   const { id, thumbnailPublicId } = req.body;
-  console.log(req.body);
 
   try {
     // Delete the image from Cloudinary
-    if (thumbnailPublicId) await cloudinary.uploader.destroy(thumbnailPublicId);
+    if (thumbnailPublicId) deleteImageFromCloudinary(thumbnailPublicId);
 
     // Delete the story from the database
     const result = await TopStoriesModel.findByIdAndDelete(id);

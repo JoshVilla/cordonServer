@@ -1,14 +1,10 @@
 const TopStoriesModel = require("../../models/TopStories");
 const cloudinary = require("../../config/cloudinaryConfig");
 
-const addStory = async (req, res) => {
+const updateStory = async (req, res) => {
   try {
-    console.log("Received Data:", req.body);
-
-    // Destructure the request body
-    const { title, items } = req.body;
-
-    // Parse `items` if it's a string (assuming JSON string input)
+    const { id, title, items } = req.body;
+    console.log(id);
     const parsedItems = typeof items === "string" ? JSON.parse(items) : items;
     console.log("Parsed Items:", parsedItems);
 
@@ -25,6 +21,10 @@ const addStory = async (req, res) => {
       thumbnailPublicId = getPublicIdForCloudinary(thumbnailUrl);
     } else {
       console.log("No file uploaded");
+      // You might want to fetch the current story if no new thumbnail is uploaded
+      const currentStory = await TopStoriesModel.findById(id);
+      thumbnailPublicId = currentStory.thumbnailPublicId; // Retain the old public ID
+      thumbnailUrl = currentStory.thumbnail; // Retain the old thumbnail URL
     }
 
     // Helper function to extract the Cloudinary public ID from the URL
@@ -37,7 +37,7 @@ const addStory = async (req, res) => {
       return "";
     }
 
-    // Prepare the parameters for the new story
+    // Prepare the parameters for the story update
     const storyData = {
       title,
       thumbnail: thumbnailUrl,
@@ -45,22 +45,29 @@ const addStory = async (req, res) => {
       content: parsedItems, // Ensure items are parsed correctly
     };
 
-    console.log("Story Params:", storyData);
+    // Update the story in the database
+    const updatedStory = await TopStoriesModel.findByIdAndUpdate(
+      id,
+      storyData, // Directly pass the update object
+      {
+        new: true, // Return the updated document
+        runValidators: true, // Ensure validation rules are applied
+      }
+    );
 
-    // Save the story to the database
-    const newStory = await TopStoriesModel.create(storyData);
+    // Check if the story was found and updated
+    if (!updatedStory) {
+      return res.status(404).json({ error: "Story not found" });
+    }
 
-    // Send a success response
-    return res.status(200).json({
-      message: "Story added successfully",
-      data: newStory,
+    res.status(200).json({
+      message: "Story updated successfully",
+      data: updatedStory,
     });
-  } catch (error) {
-    console.error("Error adding story:", error.message || error);
-    return res
-      .status(500)
-      .json({ error: "An error occurred while adding the story." });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "An error occurred while updating" });
   }
 };
 
-module.exports = { addStory };
+module.exports = { updateStory };

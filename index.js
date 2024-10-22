@@ -30,6 +30,7 @@ const {
 const { getTopStories } = require("./controllers/topStories/GetController");
 const { addStory } = require("./controllers/topStories/AddController");
 const { deleteStory } = require("./controllers/topStories/DeleteController");
+const { updateStory } = require("./controllers/topStories/UpdateController");
 const PORT = process.env.PORT;
 
 mongoose
@@ -75,6 +76,8 @@ app.get("/topStoriesInfo", getTopStories);
 app.post("/addStory", upload.single("thumbnail"), addStory);
 
 app.post("/deleteStory", deleteStory);
+
+app.post("/updateStory", upload.single("thumbnail"), updateStory);
 app.listen(PORT, () => {
   console.log("Server Running at " + PORT);
 });

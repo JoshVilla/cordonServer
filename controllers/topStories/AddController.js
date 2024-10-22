@@ -3,6 +3,14 @@ const cloudinary = require("../../config/cloudinaryConfig");
 
 const addStory = async (req, res) => {
   console.log("Received Data:", req.body);
+
+  // Check if a file has been uploaded
+  if (!req.file) {
+    console.log("No file uploaded");
+  } else {
+    console.log("File uploaded:", req.file);
+  }
+
   try {
     const { title, items } = req.body;
 
@@ -10,6 +18,7 @@ const addStory = async (req, res) => {
     const parsedItems = typeof items === "string" ? JSON.parse(items) : items;
     console.log("Parsed Items:", parsedItems);
 
+    // Upload thumbnail to Cloudinary if file is present
     const thumbnailUrl = req.file
       ? (
           await cloudinary.uploader.upload(req.file.path, {
@@ -17,6 +26,10 @@ const addStory = async (req, res) => {
           })
         ).secure_url
       : "";
+
+    console.log("Thumbnail URL:", thumbnailUrl);
+
+    // Helper function to extract the public ID from the Cloudinary URL
     const getPublicIdForCloudinary = (fileUrl) => {
       if (fileUrl) {
         const splitted = fileUrl.split("/");
@@ -32,7 +45,7 @@ const addStory = async (req, res) => {
       title,
       thumbnail: thumbnailUrl,
       thumbnailPublicId: getPublicIdForCloudinary(thumbnailUrl),
-      content: items, // Parsed and uploaded items should now be an array of objects
+      content: parsedItems, // Parsed and uploaded items should now be an array of objects
     };
 
     console.log("Params:", params);

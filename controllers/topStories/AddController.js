@@ -54,6 +54,7 @@ const addStory = async (req, res) => {
       thumbnailPublicId,
       content: parsedItems,
       createdAt: DateNow(),
+      isDisplayed: 0,
     };
 
     console.log("Saving story to database...");

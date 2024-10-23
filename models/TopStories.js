@@ -7,6 +7,7 @@ const TopStoriesSchema = new mongoose.Schema({
   date: String,
   content: Array,
   createdAt: String,
+  isDisplayed: Number,
 });
 
 const TopStoriesModel = mongoose.model("top_stories_dbs", TopStoriesSchema);

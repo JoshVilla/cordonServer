@@ -71,7 +71,7 @@ app.post("/deleteHomePageInfo", deleteHomePageInfo);
 app.post("/updateHomepageInfo", upload.single("image"), updateHomePageInfo);
 
 // Top Stories
-app.get("/topStoriesInfo", getTopStories);
+app.post("/topStoriesInfo", getTopStories);
 
 app.post("/addStory", upload.single("thumbnail"), addStory);
 

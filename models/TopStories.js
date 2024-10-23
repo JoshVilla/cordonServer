@@ -6,6 +6,7 @@ const TopStoriesSchema = new mongoose.Schema({
   thumbnailPublicId: String,
   date: String,
   content: Array,
+  createdAt: String,
 });
 
 const TopStoriesModel = mongoose.model("top_stories_dbs", TopStoriesSchema);

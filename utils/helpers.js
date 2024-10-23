@@ -1,5 +1,5 @@
 const cloudinary = require("../config/cloudinaryConfig");
-
+const moment = require("moment");
 const deleteImageFromCloudinary = async (publicId) => {
   try {
     const result = await cloudinary.uploader.destroy(publicId);
@@ -19,4 +19,6 @@ const deleteImageFromCloudinary = async (publicId) => {
   }
 };
 
-module.exports = { deleteImageFromCloudinary };
+const DateNow = () => moment().format("LL");
+
+module.exports = { deleteImageFromCloudinary, DateNow };

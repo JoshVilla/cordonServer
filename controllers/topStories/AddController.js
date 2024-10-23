@@ -1,56 +1,65 @@
 const TopStoriesModel = require("../../models/TopStories");
 const cloudinary = require("../../config/cloudinaryConfig");
-
+const { DateNow } = require("../../utils/helpers");
 const addStory = async (req, res) => {
+  console.log("Incoming request body:", req.body);
+  console.log("Incoming file:", req.file);
+
   try {
-    console.log("Received Data:", req.body);
-
-    // Destructure the request body
     const { title, items } = req.body;
+    console.log("Title:", title);
+    console.log("Items:", items);
 
-    // Parse `items` if it's a string (assuming JSON string input)
-    const parsedItems = typeof items === "string" ? JSON.parse(items) : items;
-    console.log("Parsed Items:", parsedItems);
+    // Parse items
+    let parsedItems;
+    try {
+      parsedItems = typeof items === "string" ? JSON.parse(items) : items;
+    } catch (parseError) {
+      console.error("Error parsing items:", parseError);
+      return res.status(400).json({ error: "Invalid items format." });
+    }
 
-    // Handle file upload to Cloudinary if a file is present
     let thumbnailUrl = "";
     let thumbnailPublicId = "";
 
     if (req.file) {
-      console.log("File uploaded:", req.file);
-      const uploadResult = await cloudinary.uploader.upload(req.file.path, {
-        folder: `admin_stories`,
-      });
-      thumbnailUrl = uploadResult.secure_url;
-      thumbnailPublicId = getPublicIdForCloudinary(thumbnailUrl);
+      console.log("Uploading file to Cloudinary...");
+      try {
+        const uploadResult = await cloudinary.uploader.upload(req.file.path, {
+          folder: `admin_stories`,
+        });
+        thumbnailUrl = uploadResult.secure_url;
+        thumbnailPublicId = getPublicIdForCloudinary(thumbnailUrl);
+        console.log("Cloudinary upload successful:", thumbnailUrl);
+      } catch (uploadError) {
+        console.error("Cloudinary upload failed:", uploadError);
+        return res.status(500).json({ error: "Cloudinary upload failed." });
+      }
     } else {
-      console.log("No file uploaded");
+      console.log("No file uploaded.");
     }
 
-    // Helper function to extract the Cloudinary public ID from the URL
     function getPublicIdForCloudinary(fileUrl) {
       if (fileUrl) {
         const urlParts = fileUrl.split("/");
         const publicPart = `${urlParts[7]}/${urlParts[8]}`;
-        return publicPart.split(".")[0]; // Remove the file extension
+        return publicPart.split(".")[0];
       }
       return "";
     }
 
-    // Prepare the parameters for the new story
     const storyData = {
       title,
       thumbnail: thumbnailUrl,
       thumbnailPublicId,
-      content: parsedItems, // Ensure items are parsed correctly
+      content: parsedItems,
+      createdAt: DateNow(),
     };
 
-    console.log("Story Params:", storyData);
-
-    // Save the story to the database
+    console.log("Saving story to database...");
     const newStory = await TopStoriesModel.create(storyData);
 
-    // Send a success response
+    console.log("Story added successfully:", newStory);
     return res.status(200).json({
       message: "Story added successfully",
       data: newStory,

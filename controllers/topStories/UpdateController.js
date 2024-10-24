@@ -4,7 +4,7 @@ const { deleteImageFromCloudinary } = require("../../utils/helpers");
 
 const updateStory = async (req, res) => {
   try {
-    const { id, title, items, currentThumbnailPublicId } = req.body;
+    const { id, title, items, currentThumbnailPublicId, isDisplayed } = req.body;
     const parsedItems = typeof items === "string" ? JSON.parse(items) : items;
     console.log("Parsed Items:", parsedItems);
 

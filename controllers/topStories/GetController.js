@@ -2,12 +2,12 @@ const TopStoriesModel = require("../../models/TopStories");
 const moment = require("moment");
 
 const getTopStories = async (req, res) => {
-  const { title, dates } = req.body;
+  const { title, dates, id } = req.body;
   const params = {};
-
+  console.log(req.body);
   // Add title filter if provided
   if (title) params.title = title;
-
+  if (id) params._id = id;
   // Add date range filter if provided and valid
   const { start, end } = dates || {};
   if (start && end) {

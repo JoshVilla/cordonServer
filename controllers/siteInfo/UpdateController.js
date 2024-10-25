@@ -20,14 +20,17 @@ const updateSiteInfo = async (req, res) => {
     email,
     contactNumber,
   } = req.body;
+
+  console.log(req.body, "@@@@body");
+
   let params = {};
-  let parsedAccounts = JSON.parse(accounts);
+  let parsedAccounts =
+    typeof accounts === "string" ? JSON.parse(accounts) : accounts;
   const getPublicIdForCloudinary = (file) => {
     if (file) {
       const splitted = file?.split("/");
       const public = `${splitted[7]}/${splitted[8]}`;
       const publicId = public.replace(".png", "");
-
       return publicId;
     }
     return "";
@@ -59,6 +62,7 @@ const updateSiteInfo = async (req, res) => {
         })
       ).secure_url
     : "";
+
   // Update the document by ID
   SiteInfoModel.findByIdAndUpdate(
     id,

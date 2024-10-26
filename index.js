@@ -1,14 +1,11 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const AdminModel = require("./models/Admin");
-const SiteInfoModel = require("./models/SiteInfo");
 const { addAdmin } = require("./controllers/admin/AdminController");
 const { editAdmin } = require("./controllers/admin/EditController");
 const { deleteAdmin } = require("./controllers/admin/DeleteController");
 const { getAdmin } = require("./controllers/admin/GetController");
 const { login } = require("./controllers/login/LoginController");
-const cloudinary = require("./config/cloudinaryConfig");
 require("dotenv").config();
 const app = express();
 app.use(cors());

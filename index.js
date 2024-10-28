@@ -35,6 +35,7 @@ const {
 const { addOfficial } = require("./controllers/officials/AddController");
 const { getOfficials } = require("./controllers/officials/GetController");
 const { deleteOfficial } = require("./controllers/officials/DeleteController");
+const { updateOfficial } = require("./controllers/officials/UpdateController");
 const PORT = process.env.PORT;
 
 mongoose
@@ -92,6 +93,8 @@ app.post("/addOfficial", upload.single("profile"), addOfficial);
 app.post("/getOfficials", getOfficials);
 
 app.post("/deleteOfficial", deleteOfficial);
+
+app.post("/updateOfficial", updateOfficial);
 
 app.listen(PORT, () => {
   console.log("Server Running at " + PORT);

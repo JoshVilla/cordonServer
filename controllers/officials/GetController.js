@@ -1,6 +1,6 @@
 import OfficialsModel from "../../models/Officials.js";
 
-export const getOfficials = async (req, res) => {
+const getOfficials = async (req, res) => {
   const { name, position } = req.body;
 
   let payload = {};
@@ -14,3 +14,5 @@ export const getOfficials = async (req, res) => {
     console.log(err);
   }
 };
+
+export default getOfficials;

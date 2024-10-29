@@ -2,11 +2,6 @@ import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
-import { addAdmin } from "./controllers/admin/AdminController.js";
-import { editAdmin } from "./controllers/admin/EditController.js";
-import { deleteAdmin } from "./controllers/admin/DeleteController.js";
-import { getAdmin } from "./controllers/admin/GetController.js";
-import { login } from "./controllers/login/LoginController.js";
 
 dotenv.config();
 const app = express();
@@ -15,23 +10,38 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 import upload from "./middleware/upload.js";
-import { updateSiteInfo } from "./controllers/siteInfo/UpdateController.js";
-import { getSiteInfo } from "./controllers/siteInfo/GetController.js";
-import { getHomepageInfo } from "./controllers/homepage/GetController.js";
-import { addHomePageInfo } from "./controllers/homepage/AddController.js";
-import { deleteHomePageInfo } from "./controllers/homepage/DeleteController.js";
-import { updateHomePageInfo } from "./controllers/homepage/UpdateController.js";
 
-import { getTopStories } from "./controllers/topStories/GetController.js";
-import { addStory } from "./controllers/topStories/AddController.js";
-import { deleteStory } from "./controllers/topStories/DeleteController.js";
-import { updateStory } from "./controllers/topStories/UpdateController.js";
-import { updateDisplay } from "./controllers/topStories/UpdateDisplayController.js";
+import {
+  getAdmin,
+  deleteAdmin,
+  editAdmin,
+  addAdmin,
+} from "./controllers/admin/index.js";
+import { login } from "./controllers/login/LoginController.js";
 
-import { addOfficial } from "./controllers/officials/AddController.js";
-import { getOfficials } from "./controllers/officials/GetController.js";
-import { deleteOfficial } from "./controllers/officials/DeleteController.js";
-import { updateOfficial } from "./controllers/officials/UpdateController.js";
+import { updateSiteInfo, getSiteInfo } from "./controllers/siteInfo/index.js";
+
+import {
+  getHomepageInfo,
+  addHomePageInfo,
+  deleteHomePageInfo,
+  updateHomePageInfo,
+} from "./controllers/homepage/index.js";
+
+import {
+  addStory,
+  deleteStory,
+  getTopStories,
+  updateDisplay,
+  updateStory,
+} from "./controllers/topStories/index.js";
+
+import {
+  addOfficial,
+  getOfficials,
+  deleteOfficial,
+  updateOfficial,
+} from "./controllers/officials/index.js";
 const PORT = process.env.PORT;
 
 mongoose

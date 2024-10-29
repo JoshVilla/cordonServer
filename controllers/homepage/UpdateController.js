@@ -1,7 +1,7 @@
 import HomepageModel from "../../models/Homepage.js";
 import cloudinary from "../../config/cloudinaryConfig.js";
 
-export const updateHomePageInfo = async (req, res) => {
+const updateHomePageInfo = async (req, res) => {
   const {
     section,
     sorted,
@@ -132,3 +132,5 @@ export const updateHomePageInfo = async (req, res) => {
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+export default updateHomePageInfo;

@@ -2,7 +2,7 @@ import AdminModel from "../../models/Admin.js";
 import cloudinary from "../../config/cloudinaryConfig.js";
 import base64 from "base-64";
 
-export const editAdmin = async (req, res) => {
+const editAdmin = async (req, res) => {
   const { id, username, password, isSuperAdmin } = req.body;
 
   if (!id) {
@@ -66,3 +66,5 @@ export const editAdmin = async (req, res) => {
         .json({ message: "Error updating admin", error: err.message });
     });
 };
+
+export default editAdmin;

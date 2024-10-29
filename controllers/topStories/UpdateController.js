@@ -2,7 +2,7 @@ import TopStoriesModel from "../../models/TopStories.js";
 import cloudinary from "../../config/cloudinaryConfig.js";
 import { deleteImageFromCloudinary } from "../../utils/helpers.js";
 
-export const updateStory = async (req, res) => {
+const updateStory = async (req, res) => {
   try {
     const { id, title, items, currentThumbnailPublicId, isDisplayed } =
       req.body;
@@ -71,3 +71,5 @@ export const updateStory = async (req, res) => {
     res.status(500).json({ error: "An error occurred while updating" });
   }
 };
+
+export default updateStory;

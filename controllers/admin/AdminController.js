@@ -25,7 +25,7 @@ const storage = multer.diskStorage({
   },
 });
 
-export const upload = multer({
+const upload = multer({
   storage: storage,
   fileFilter: (req, file, cb) => {
     const ext = path.extname(file.originalname).toLowerCase();
@@ -37,7 +37,7 @@ export const upload = multer({
 });
 
 // Controller function to add an admin
-export const addAdmin = async (req, res) => {
+const addAdmin = async (req, res) => {
   try {
     // Access form data and file from req.body and req.file
     const { username, password, isSuperAdmin, createdAt } = req.body;
@@ -71,3 +71,5 @@ export const addAdmin = async (req, res) => {
     return res.status(500).json({ error: err.message });
   }
 };
+
+export default addAdmin;

@@ -1,6 +1,6 @@
 import TopStoriesModel from "../../models/TopStories.js";
 import { deleteImageFromCloudinary } from "../../utils/helpers.js";
-export const deleteStory = async (req, res) => {
+const deleteStory = async (req, res) => {
   const { id, thumbnailPublicId } = req.body;
 
   try {
@@ -20,3 +20,5 @@ export const deleteStory = async (req, res) => {
     res.status(500).json({ message: "An error occurred", error: err.message });
   }
 };
+
+export default deleteStory;

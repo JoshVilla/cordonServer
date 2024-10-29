@@ -1,6 +1,6 @@
 import SiteInfoModel from "../../models/SiteInfo.js";
 
-export const getSiteInfo = (req, res) => {
+const getSiteInfo = (req, res) => {
   SiteInfoModel.find()
     .then((result) => {
       return res.status(200).json(result);
@@ -11,3 +11,5 @@ export const getSiteInfo = (req, res) => {
         .json({ error: "An error occurred while fetching site info" });
     });
 };
+
+export default getSiteInfo;

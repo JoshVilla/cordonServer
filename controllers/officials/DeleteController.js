@@ -1,7 +1,7 @@
 import OfficialsModel from "../../models/Officials.js";
 import { deleteImageFromCloudinary } from "../../utils/helpers.js";
 
-export const deleteOfficial = async (req, res) => {
+const deleteOfficial = async (req, res) => {
   try {
     const { id, profilePublicId } = req.body;
     console.log(req.body);
@@ -18,3 +18,5 @@ export const deleteOfficial = async (req, res) => {
     return res.status(500).json({ error: "Deleting official failed" });
   }
 };
+
+export default deleteOfficial;

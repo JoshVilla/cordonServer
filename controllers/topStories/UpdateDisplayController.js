@@ -1,6 +1,6 @@
 import TopStoriesModel from "../../models/TopStories.js";
 
-export const updateDisplay = async (req, res) => {
+const updateDisplay = async (req, res) => {
   try {
     const { isDisplayed, id } = req.body;
 
@@ -20,3 +20,5 @@ export const updateDisplay = async (req, res) => {
     res.status(500).json({ message: "Server Error" });
   }
 };
+
+export default updateDisplay;

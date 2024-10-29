@@ -1,7 +1,7 @@
 import cloudinary from "../../config/cloudinaryConfig.js";
 import HomepageModel from "../../models/Homepage.js";
 
-export const addHomePageInfo = async (req, res) => {
+const addHomePageInfo = async (req, res) => {
   const { section, sorted, display, title, content, hotline_1, hotline_2 } =
     req.body;
 
@@ -67,3 +67,5 @@ export const addHomePageInfo = async (req, res) => {
       .catch((err) => res.json(err));
   }
 };
+
+export default addHomePageInfo;

@@ -9,7 +9,7 @@ const deletePreviousImage = (_id) => {
   });
 };
 
-export const updateSiteInfo = async (req, res) => {
+const updateSiteInfo = async (req, res) => {
   const {
     id,
     title,
@@ -89,3 +89,5 @@ export const updateSiteInfo = async (req, res) => {
       res.status(500).json({ error: "An error occurred while updating" });
     });
 };
+
+export default updateSiteInfo;

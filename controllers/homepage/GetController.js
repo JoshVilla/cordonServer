@@ -1,6 +1,6 @@
 import HomepageModel from "../../models/Homepage.js";
 
-export const getHomepageInfo = (req, res) => {
+const getHomepageInfo = (req, res) => {
   HomepageModel.find({})
     .then((result) => {
       res.json(result);
@@ -9,3 +9,5 @@ export const getHomepageInfo = (req, res) => {
       res.json(err);
     });
 };
+
+export default getHomepageInfo;

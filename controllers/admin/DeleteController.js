@@ -1,7 +1,7 @@
 import cloudinary from "../../config/cloudinaryConfig.js";
 import AdminModel from "../../models/Admin.js";
 
-export const deleteAdmin = async (req, res) => {
+const deleteAdmin = async (req, res) => {
   const { _id } = req.body;
 
   const getPublicIdForCloudinary = (file) => {
@@ -28,3 +28,5 @@ export const deleteAdmin = async (req, res) => {
     })
     .catch((err) => res.json(err));
 };
+
+export default deleteAdmin;

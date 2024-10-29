@@ -9,7 +9,7 @@ const getPublicIdForCloudinary = (fileUrl) => {
   return "";
 };
 
-export const countOfficialsByPosition = async () => {
+const countOfficialsByPosition = async () => {
   try {
     const counts = await OfficialsModel.aggregate([
       { $group: { _id: "$position", count: { $sum: 1 } } },
@@ -44,7 +44,7 @@ const messageCount = (position) => {
   return messages[position] || "Invalid position";
 };
 
-export const addOfficial = async (req, res) => {
+const addOfficial = async (req, res) => {
   const { name, position, level } = req.body;
 
   let profileUrl = "";
@@ -98,3 +98,5 @@ export const addOfficial = async (req, res) => {
     return res.status(500).json({ error: "Adding official failed" });
   }
 };
+
+export default addOfficial;

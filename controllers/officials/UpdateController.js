@@ -1,6 +1,6 @@
 import OfficialsModel from "../../models/Officials.js";
 
-export const updateOfficial = async (req, res) => {
+const updateOfficial = async (req, res) => {
   const { profile, name, position, level, id } = req.body;
   try {
     if (profile) {
@@ -29,3 +29,5 @@ export const updateOfficial = async (req, res) => {
     return res.json({ massage: "Edit Official Failed" });
   }
 };
+
+export default updateOfficial;

@@ -1,5 +1,5 @@
 import AdminModel from "../../models/Admin.js";
-export const getAdmin = (req, res) => {
+const getAdmin = (req, res) => {
   // Initialize the query object
   let query = {};
 
@@ -25,3 +25,4 @@ export const getAdmin = (req, res) => {
       res.json(err);
     });
 };
+export default getAdmin;

@@ -1,7 +1,7 @@
-const cloudinary = require("../../config/cloudinaryConfig");
-const HomepageModel = require("../../models/Homepage");
+import cloudinary from "../../config/cloudinaryConfig.js";
+import HomepageModel from "../../models/Homepage.js";
 
-const addHomePageInfo = async (req, res) => {
+export const addHomePageInfo = async (req, res) => {
   const { section, sorted, display, title, content, hotline_1, hotline_2 } =
     req.body;
 
@@ -16,8 +16,8 @@ const addHomePageInfo = async (req, res) => {
   const getPublicIdForCloudinary = (file) => {
     if (file) {
       const splitted = file?.split("/");
-      const public = `${splitted[7]}/${splitted[8]}`;
-      const publicId = public.replace(".png", "");
+      const publicCombine = `${splitted[7]}/${splitted[8]}`;
+      const publicId = publicCombine.replace(".png", "");
 
       return publicId;
     }
@@ -67,5 +67,3 @@ const addHomePageInfo = async (req, res) => {
       .catch((err) => res.json(err));
   }
 };
-
-module.exports = { addHomePageInfo };

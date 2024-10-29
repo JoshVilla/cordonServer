@@ -1,7 +1,7 @@
-const HomepageModel = require("../../models/Homepage");
-const cloudinary = require("../../config/cloudinaryConfig");
+import HomepageModel from "../../models/Homepage.js";
+import cloudinary from "../../config/cloudinaryConfig.js";
 
-const deleteHomePageInfo = async (req, res) => {
+export const deleteHomePageInfo = async (req, res) => {
   const { section, idSectionData, imagePublicId } = req.body;
 
   const deleteImageFromCloudinary = async (imagePublicId) => {
@@ -18,5 +18,3 @@ const deleteHomePageInfo = async (req, res) => {
     })
     .catch((err) => res.json(err));
 };
-
-module.exports = { deleteHomePageInfo };

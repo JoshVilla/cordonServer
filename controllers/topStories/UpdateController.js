@@ -1,10 +1,11 @@
-const TopStoriesModel = require("../../models/TopStories");
-const cloudinary = require("../../config/cloudinaryConfig");
-const { deleteImageFromCloudinary } = require("../../utils/helpers");
+import TopStoriesModel from "../../models/TopStories.js";
+import cloudinary from "../../config/cloudinaryConfig.js";
+import { deleteImageFromCloudinary } from "../../utils/helpers.js";
 
-const updateStory = async (req, res) => {
+export const updateStory = async (req, res) => {
   try {
-    const { id, title, items, currentThumbnailPublicId, isDisplayed } = req.body;
+    const { id, title, items, currentThumbnailPublicId, isDisplayed } =
+      req.body;
     const parsedItems = typeof items === "string" ? JSON.parse(items) : items;
     console.log("Parsed Items:", parsedItems);
 
@@ -70,5 +71,3 @@ const updateStory = async (req, res) => {
     res.status(500).json({ error: "An error occurred while updating" });
   }
 };
-
-module.exports = { updateStory };

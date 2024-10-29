@@ -1,5 +1,5 @@
-const OfficialsModel = require("../../models/Officials");
-const cloudinary = require("../../config/cloudinaryConfig");
+import OfficialsModel from "../../models/Officials.js";
+import cloudinary from "../../config/cloudinaryConfig.js";
 
 const getPublicIdForCloudinary = (fileUrl) => {
   if (fileUrl) {
@@ -9,7 +9,7 @@ const getPublicIdForCloudinary = (fileUrl) => {
   return "";
 };
 
-const countOfficialsByPosition = async () => {
+export const countOfficialsByPosition = async () => {
   try {
     const counts = await OfficialsModel.aggregate([
       { $group: { _id: "$position", count: { $sum: 1 } } },
@@ -44,7 +44,7 @@ const messageCount = (position) => {
   return messages[position] || "Invalid position";
 };
 
-const addOfficial = async (req, res) => {
+export const addOfficial = async (req, res) => {
   const { name, position, level } = req.body;
 
   let profileUrl = "";
@@ -98,5 +98,3 @@ const addOfficial = async (req, res) => {
     return res.status(500).json({ error: "Adding official failed" });
   }
 };
-
-module.exports = { addOfficial };

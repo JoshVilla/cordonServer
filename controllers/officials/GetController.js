@@ -1,6 +1,6 @@
-const OfficialsModel = require("../../models/Officials");
+import OfficialsModel from "../../models/Officials.js";
 
-const getOfficials = async (req, res) => {
+export const getOfficials = async (req, res) => {
   const { name, position } = req.body;
 
   let payload = {};
@@ -14,5 +14,3 @@ const getOfficials = async (req, res) => {
     console.log(err);
   }
 };
-
-module.exports = { getOfficials };

@@ -1,7 +1,8 @@
-const AdminModel = require("../../models/Admin");
-const cloudinary = require("../../config/cloudinaryConfig");
-const base64 = require("base-64");
-const editAdmin = async (req, res) => {
+import AdminModel from "../../models/Admin.js";
+import cloudinary from "../../config/cloudinaryConfig.js";
+import base64 from "base-64";
+
+export const editAdmin = async (req, res) => {
   const { id, username, password, isSuperAdmin } = req.body;
 
   if (!id) {
@@ -11,8 +12,8 @@ const editAdmin = async (req, res) => {
   const getPublicIdForCloudinary = (file) => {
     if (file) {
       const splitted = file?.split("/");
-      const public = `${splitted[7]}/${splitted[8]}`;
-      const publicId = public.replace(".png", "");
+      const publicCombine = `${splitted[7]}/${splitted[8]}`;
+      const publicId = publicCombine.replace(".png", "");
 
       return publicId;
     }
@@ -65,5 +66,3 @@ const editAdmin = async (req, res) => {
         .json({ message: "Error updating admin", error: err.message });
     });
 };
-
-module.exports = { editAdmin };

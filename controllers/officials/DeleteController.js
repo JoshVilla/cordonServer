@@ -1,7 +1,7 @@
-const OfficialsModel = require("../../models/Officials");
-const { deleteImageFromCloudinary } = require("../../utils/helpers");
+import OfficialsModel from "../../models/Officials.js";
+import { deleteImageFromCloudinary } from "../../utils/helpers.js";
 
-const deleteOfficial = async (req, res) => {
+export const deleteOfficial = async (req, res) => {
   try {
     const { id, profilePublicId } = req.body;
     console.log(req.body);
@@ -18,5 +18,3 @@ const deleteOfficial = async (req, res) => {
     return res.status(500).json({ error: "Deleting official failed" });
   }
 };
-
-module.exports = { deleteOfficial };

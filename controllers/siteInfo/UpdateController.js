@@ -1,5 +1,5 @@
-const SiteInfoModel = require("../../models/SiteInfo");
-const cloudinary = require("../../config/cloudinaryConfig");
+import SiteInfoModel from "../../models/SiteInfo.js";
+import cloudinary from "../../config/cloudinaryConfig.js";
 
 const deletePreviousImage = (_id) => {
   SiteInfoModel.findById(_id).then((result) => {
@@ -9,7 +9,7 @@ const deletePreviousImage = (_id) => {
   });
 };
 
-const updateSiteInfo = async (req, res) => {
+export const updateSiteInfo = async (req, res) => {
   const {
     id,
     title,
@@ -29,8 +29,8 @@ const updateSiteInfo = async (req, res) => {
   const getPublicIdForCloudinary = (file) => {
     if (file) {
       const splitted = file?.split("/");
-      const public = `${splitted[7]}/${splitted[8]}`;
-      const publicId = public.replace(".png", "");
+      const publicCombine = `${splitted[7]}/${splitted[8]}`;
+      const publicId = publicCombine.replace(".png", "");
       return publicId;
     }
     return "";
@@ -89,5 +89,3 @@ const updateSiteInfo = async (req, res) => {
       res.status(500).json({ error: "An error occurred while updating" });
     });
 };
-
-module.exports = { updateSiteInfo };

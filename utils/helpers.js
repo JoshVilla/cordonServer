@@ -1,6 +1,7 @@
-const cloudinary = require("../config/cloudinaryConfig");
-const moment = require("moment");
-const deleteImageFromCloudinary = async (publicId) => {
+import cloudinary from "../config/cloudinaryConfig.js";
+import moment from "moment";
+
+export const deleteImageFromCloudinary = async (publicId) => {
   try {
     const result = await cloudinary.uploader.destroy(publicId);
     if (result.result === "ok") {
@@ -19,6 +20,4 @@ const deleteImageFromCloudinary = async (publicId) => {
   }
 };
 
-const DateNow = () => moment().format("LL");
-
-module.exports = { deleteImageFromCloudinary, DateNow };
+export const DateNow = () => moment().format("LL");

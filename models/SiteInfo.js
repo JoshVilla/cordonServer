@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const SiteInfoSchema = new mongoose.Schema({
   title: String,
@@ -13,4 +13,4 @@ const SiteInfoSchema = new mongoose.Schema({
 });
 
 const SiteInfoModel = mongoose.model("site_informations", SiteInfoSchema);
-module.exports = SiteInfoModel;
+export default SiteInfoModel;

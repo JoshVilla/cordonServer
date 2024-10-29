@@ -1,6 +1,6 @@
-const TopStoriesModel = require("../../models/TopStories");
+import TopStoriesModel from "../../models/TopStories.js";
 
-const updateDisplay = async (req, res) => {
+export const updateDisplay = async (req, res) => {
   try {
     const { isDisplayed, id } = req.body;
 
@@ -20,5 +20,3 @@ const updateDisplay = async (req, res) => {
     res.status(500).json({ message: "Server Error" });
   }
 };
-
-module.exports = { updateDisplay };

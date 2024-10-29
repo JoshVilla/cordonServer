@@ -1,6 +1,6 @@
-const SiteInfoModel = require("../../models/SiteInfo");
+import SiteInfoModel from "../../models/SiteInfo.js";
 
-const getSiteInfo = (req, res) => {
+export const getSiteInfo = (req, res) => {
   SiteInfoModel.find()
     .then((result) => {
       return res.status(200).json(result);
@@ -11,5 +11,3 @@ const getSiteInfo = (req, res) => {
         .json({ error: "An error occurred while fetching site info" });
     });
 };
-
-module.exports = { getSiteInfo };

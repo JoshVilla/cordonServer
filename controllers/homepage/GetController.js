@@ -1,6 +1,6 @@
-const HomepageModel = require("../../models/Homepage");
+import HomepageModel from "../../models/Homepage.js";
 
-const getHomepageInfo = (req, res) => {
+export const getHomepageInfo = (req, res) => {
   HomepageModel.find({})
     .then((result) => {
       res.json(result);
@@ -9,5 +9,3 @@ const getHomepageInfo = (req, res) => {
       res.json(err);
     });
 };
-
-module.exports = { getHomepageInfo };

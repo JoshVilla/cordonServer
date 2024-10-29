@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const OfficialsSchema = new mongoose.Schema({
   name: String,
@@ -12,4 +12,4 @@ const OfficialsModel = mongoose.model(
   "officials_informations",
   OfficialsSchema
 );
-module.exports = OfficialsModel;
+export default OfficialsModel;

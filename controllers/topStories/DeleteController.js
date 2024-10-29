@@ -1,7 +1,6 @@
-const TopStoriesModel = require("../../models/TopStories");
-const cloudinary = require("../../config/cloudinaryConfig");
-const { deleteImageFromCloudinary } = require("../../utils/helpers");
-const deleteStory = async (req, res) => {
+import TopStoriesModel from "../../models/TopStories.js";
+import { deleteImageFromCloudinary } from "../../utils/helpers.js";
+export const deleteStory = async (req, res) => {
   const { id, thumbnailPublicId } = req.body;
 
   try {
@@ -21,5 +20,3 @@ const deleteStory = async (req, res) => {
     res.status(500).json({ message: "An error occurred", error: err.message });
   }
 };
-
-module.exports = { deleteStory };

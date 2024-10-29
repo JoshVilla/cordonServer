@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const HighlightSchema = new mongoose.Schema({
   sorted: {
@@ -57,4 +57,4 @@ const HomepageSchema = new mongoose.Schema({
 
 const HomepageModel = mongoose.model("homepage_dbs", HomepageSchema);
 
-module.exports = HomepageModel;
+export default HomepageModel;

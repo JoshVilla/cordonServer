@@ -1,6 +1,6 @@
-const OfficialsModel = require("../../models/Officials");
+import OfficialsModel from "../../models/Officials.js";
 
-const updateOfficial = async (req, res) => {
+export const updateOfficial = async (req, res) => {
   const { profile, name, position, level, id } = req.body;
   try {
     if (profile) {
@@ -29,5 +29,3 @@ const updateOfficial = async (req, res) => {
     return res.json({ massage: "Edit Official Failed" });
   }
 };
-
-module.exports = { updateOfficial };

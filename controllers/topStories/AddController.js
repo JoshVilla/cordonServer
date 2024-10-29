@@ -1,7 +1,7 @@
-const TopStoriesModel = require("../../models/TopStories");
-const cloudinary = require("../../config/cloudinaryConfig");
-const { DateNow } = require("../../utils/helpers");
-const addStory = async (req, res) => {
+import TopStoriesModel from "../../models/TopStories.js";
+import cloudinary from "../../config/cloudinaryConfig.js";
+import { DateNow } from "../../utils/helpers.js";
+export const addStory = async (req, res) => {
   console.log("Incoming request body:", req.body);
   console.log("Incoming file:", req.file);
 
@@ -72,5 +72,3 @@ const addStory = async (req, res) => {
       .json({ error: "An error occurred while adding the story." });
   }
 };
-
-module.exports = { addStory };

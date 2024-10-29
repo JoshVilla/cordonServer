@@ -1,6 +1,6 @@
-const AdminModel = require("../../models/Admin");
-const base64 = require("base-64");
-const login = async (req, res) => {
+import AdminModel from "../../models/Admin.js";
+import base64 from "base-64";
+export const login = async (req, res) => {
   const { username, password } = req.body;
 
   // Find user by username
@@ -26,5 +26,3 @@ const login = async (req, res) => {
       return res.status(500).json({ error: "Server error", details: err });
     });
 };
-
-module.exports = { login };

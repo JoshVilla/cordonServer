@@ -1,14 +1,14 @@
-const cloudinary = require("../../config/cloudinaryConfig");
-const AdminModel = require("../../models/Admin");
-const base64 = require("base-64");
-const multer = require("multer");
-const path = require("path");
+import cloudinary from "../../config/cloudinaryConfig.js";
+import AdminModel from "../../models/Admin.js";
+import base64 from "base-64";
+import multer from "multer";
+import path from "path";
 
 const getPublicIdForCloudinary = (file) => {
   if (file) {
     const splitted = file?.split("/");
-    const public = `${splitted[7]}/${splitted[8]}`;
-    const publicId = public.replace(".png", "");
+    const publicCombine = `${splitted[7]}/${splitted[8]}`;
+    const publicId = publicCombine.replace(".png", "");
 
     return publicId;
   }
@@ -25,7 +25,7 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({
+export const upload = multer({
   storage: storage,
   fileFilter: (req, file, cb) => {
     const ext = path.extname(file.originalname).toLowerCase();
@@ -37,7 +37,7 @@ const upload = multer({
 });
 
 // Controller function to add an admin
-const addAdmin = async (req, res) => {
+export const addAdmin = async (req, res) => {
   try {
     // Access form data and file from req.body and req.file
     const { username, password, isSuperAdmin, createdAt } = req.body;
@@ -71,6 +71,3 @@ const addAdmin = async (req, res) => {
     return res.status(500).json({ error: err.message });
   }
 };
-
-// Export both multer upload middleware and controller
-module.exports = { addAdmin, upload };

@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const TopStoriesSchema = new mongoose.Schema({
   title: String,
@@ -11,4 +11,4 @@ const TopStoriesSchema = new mongoose.Schema({
 });
 
 const TopStoriesModel = mongoose.model("top_stories_dbs", TopStoriesSchema);
-module.exports = TopStoriesModel;
+export default TopStoriesModel;

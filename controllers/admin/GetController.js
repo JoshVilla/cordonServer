@@ -1,5 +1,5 @@
-const AdminModel = require("../../models/Admin");
-const getAdmin = (req, res) => {
+import AdminModel from "../../models/Admin.js";
+export const getAdmin = (req, res) => {
   // Initialize the query object
   let query = {};
 
@@ -25,5 +25,3 @@ const getAdmin = (req, res) => {
       res.json(err);
     });
 };
-
-module.exports = { getAdmin };

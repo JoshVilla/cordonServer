@@ -1,7 +1,7 @@
-const TopStoriesModel = require("../../models/TopStories");
-const moment = require("moment");
+import TopStoriesModel from "../../models/TopStories.js";
+import moment from "moment";
 
-const getTopStories = async (req, res) => {
+export const getTopStories = async (req, res) => {
   const { title, dates, id } = req.body;
   const params = {};
   console.log(req.body);
@@ -28,5 +28,3 @@ const getTopStories = async (req, res) => {
       .json({ error: "An error occurred while fetching top stories." });
   }
 };
-
-module.exports = { getTopStories };

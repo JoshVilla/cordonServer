@@ -1,41 +1,37 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const cors = require("cors");
-const { addAdmin } = require("./controllers/admin/AdminController");
-const { editAdmin } = require("./controllers/admin/EditController");
-const { deleteAdmin } = require("./controllers/admin/DeleteController");
-const { getAdmin } = require("./controllers/admin/GetController");
-const { login } = require("./controllers/login/LoginController");
-require("dotenv").config();
+import express from "express";
+import mongoose from "mongoose";
+import cors from "cors";
+import dotenv from "dotenv";
+import { addAdmin } from "./controllers/admin/AdminController.js";
+import { editAdmin } from "./controllers/admin/EditController.js";
+import { deleteAdmin } from "./controllers/admin/DeleteController.js";
+import { getAdmin } from "./controllers/admin/GetController.js";
+import { login } from "./controllers/login/LoginController.js";
+
+dotenv.config();
 const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const upload = require("./middleware/upload");
-const { updateSiteInfo } = require("./controllers/siteInfo/UpdateController");
-const { getSiteInfo } = require("./controllers/siteInfo/GetController");
-const { getHomepageInfo } = require("./controllers/homepage/GetController");
-const { addHomePageInfo } = require("./controllers/homepage/AddController");
-const {
-  deleteHomePageInfo,
-} = require("./controllers/homepage/DeleteController");
-const {
-  updateHomePageInfo,
-} = require("./controllers/homepage/UpdateController");
+import upload from "./middleware/upload.js";
+import { updateSiteInfo } from "./controllers/siteInfo/UpdateController.js";
+import { getSiteInfo } from "./controllers/siteInfo/GetController.js";
+import { getHomepageInfo } from "./controllers/homepage/GetController.js";
+import { addHomePageInfo } from "./controllers/homepage/AddController.js";
+import { deleteHomePageInfo } from "./controllers/homepage/DeleteController.js";
+import { updateHomePageInfo } from "./controllers/homepage/UpdateController.js";
 
-const { getTopStories } = require("./controllers/topStories/GetController");
-const { addStory } = require("./controllers/topStories/AddController");
-const { deleteStory } = require("./controllers/topStories/DeleteController");
-const { updateStory } = require("./controllers/topStories/UpdateController");
-const {
-  updateDisplay,
-} = require("./controllers/topStories/UpdateDisplayController");
+import { getTopStories } from "./controllers/topStories/GetController.js";
+import { addStory } from "./controllers/topStories/AddController.js";
+import { deleteStory } from "./controllers/topStories/DeleteController.js";
+import { updateStory } from "./controllers/topStories/UpdateController.js";
+import { updateDisplay } from "./controllers/topStories/UpdateDisplayController.js";
 
-const { addOfficial } = require("./controllers/officials/AddController");
-const { getOfficials } = require("./controllers/officials/GetController");
-const { deleteOfficial } = require("./controllers/officials/DeleteController");
-const { updateOfficial } = require("./controllers/officials/UpdateController");
+import { addOfficial } from "./controllers/officials/AddController.js";
+import { getOfficials } from "./controllers/officials/GetController.js";
+import { deleteOfficial } from "./controllers/officials/DeleteController.js";
+import { updateOfficial } from "./controllers/officials/UpdateController.js";
 const PORT = process.env.PORT;
 
 mongoose

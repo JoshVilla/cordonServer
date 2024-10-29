@@ -1,14 +1,14 @@
-const cloudinary = require("../../config/cloudinaryConfig");
-const AdminModel = require("../../models/Admin");
+import cloudinary from "../../config/cloudinaryConfig.js";
+import AdminModel from "../../models/Admin.js";
 
-const deleteAdmin = async (req, res) => {
+export const deleteAdmin = async (req, res) => {
   const { _id } = req.body;
 
   const getPublicIdForCloudinary = (file) => {
     if (file) {
       const splitted = file?.split("/");
-      const public = `${splitted[7]}/${splitted[8]}`;
-      const publicId = public.replace(".png", "");
+      const publicCombine = `${splitted[7]}/${splitted[8]}`;
+      const publicId = publicCombine.replace(".png", "");
 
       return publicId;
     }
@@ -28,5 +28,3 @@ const deleteAdmin = async (req, res) => {
     })
     .catch((err) => res.json(err));
 };
-
-module.exports = { deleteAdmin };

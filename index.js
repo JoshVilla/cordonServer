@@ -3,12 +3,6 @@ import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
 
-dotenv.config();
-const app = express();
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
 import upload from "./middleware/upload.js";
 
 import {
@@ -42,12 +36,19 @@ import {
   deleteOfficial,
   updateOfficial,
 } from "./controllers/officials/index.js";
-const PORT = process.env.PORT;
 
 mongoose
   .connect(process.env.ATLAS_DB_LINK)
   .then((res) => console.log("Connect to Atlas"))
   .catch((err) => console.log(err));
+
+dotenv.config();
+
+const app = express();
+const PORT = process.env.PORT;
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 //Admin Management
 

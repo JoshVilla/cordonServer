@@ -10,7 +10,7 @@ const addStory = async (req, res) => {
     console.log("Title:", title);
     console.log("Items:", items);
 
-    // Parse items
+    // Parsed items
     let parsedItems;
     try {
       parsedItems = typeof items === "string" ? JSON.parse(items) : items;

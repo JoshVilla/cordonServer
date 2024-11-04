@@ -101,7 +101,7 @@ app.post("/getOfficials", getOfficials);
 
 app.post("/deleteOfficial", deleteOfficial);
 
-app.post("/updateOfficial", updateOfficial);
+app.post("/updateOfficial", upload.single("profile"), updateOfficial);
 
 app.listen(PORT, () => {
   console.log("Server Running at " + PORT);

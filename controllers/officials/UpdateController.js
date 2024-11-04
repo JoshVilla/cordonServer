@@ -1,9 +1,19 @@
 import OfficialsModel from "../../models/Officials.js";
+import cloudinary from "../../config/cloudinaryConfig.js";
 
 const updateOfficial = async (req, res) => {
   const { profile, name, position, level, id } = req.body;
+  let profilePublicId, profileUrl;
+
+  const getPublicIdForCloudinary = (fileUrl) => {
+    if (fileUrl) {
+      const urlParts = fileUrl.split("/");
+      return `${urlParts[7]}/${urlParts[8]}`.split(".")[0];
+    }
+    return "";
+  };
   try {
-    if (profile) {
+    if (req.file) {
       const uploadResult = await cloudinary.uploader.upload(req.file.path, {
         folder: `admin_officials`,
       });
@@ -15,8 +25,8 @@ const updateOfficial = async (req, res) => {
       name,
       position,
       level,
-      ...(profile && {
-        profile,
+      ...(req.file && {
+        profile: profileUrl,
         profilePublicId,
       }),
     });
@@ -26,7 +36,7 @@ const updateOfficial = async (req, res) => {
     });
   } catch (err) {
     console.log(err);
-    return res.json({ massage: "Edit Official Failed" });
+    return res.json({ message: "Edit Official Failed" });
   }
 };
 

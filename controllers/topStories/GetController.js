@@ -2,7 +2,7 @@ import TopStoriesModel from "../../models/TopStories.js";
 import moment from "moment";
 
 const getTopStories = async (req, res) => {
-  const { title, dates, id, page = 1, limit = 10 } = req.body; // Set default values for page and limit
+  const { title, dates, id, page = 1, limit = 9 } = req.body; // Set default values for page and limit
   const params = {};
   const pageSize = parseInt(limit, 10); // Number of items per page
   const pageNumber = parseInt(page, 10); // Current page number

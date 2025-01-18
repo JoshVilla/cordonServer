@@ -2,13 +2,8 @@ import TopStoriesModel from "../../models/TopStories.js";
 import cloudinary from "../../config/cloudinaryConfig.js";
 import { DateNow } from "../../utils/helpers.js";
 const addStory = async (req, res) => {
-  console.log("Incoming request body:", req.body);
-  console.log("Incoming file:", req.file);
-
   try {
     const { title, items } = req.body;
-    console.log("Title:", title);
-    console.log("Items:", items);
 
     // Parsed items
     let parsedItems;
@@ -30,7 +25,6 @@ const addStory = async (req, res) => {
         });
         thumbnailUrl = uploadResult.secure_url;
         thumbnailPublicId = getPublicIdForCloudinary(thumbnailUrl);
-        console.log("Cloudinary upload successful:", thumbnailUrl);
       } catch (uploadError) {
         console.error("Cloudinary upload failed:", uploadError);
         return res.status(500).json({ error: "Cloudinary upload failed." });
@@ -57,10 +51,8 @@ const addStory = async (req, res) => {
       isDisplayed: 0,
     };
 
-    console.log("Saving story to database...");
     const newStory = await TopStoriesModel.create(storyData);
 
-    console.log("Story added successfully:", newStory);
     return res.status(200).json({
       message: "Story added successfully",
       data: newStory,

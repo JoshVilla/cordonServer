@@ -40,7 +40,7 @@ const upload = multer({
 const addAdmin = async (req, res) => {
   try {
     // Access form data and file from req.body and req.file
-    const { username, password, isSuperAdmin, createdAt } = req.body;
+    const { username, password, isSuperAdmin, createdAt, isActive } = req.body;
     const account = await AdminModel.findOne({ username });
 
     if (account) return res.json("Username Exists");
@@ -59,7 +59,7 @@ const addAdmin = async (req, res) => {
       username,
       password: base64.encode(password),
       isSuperAdmin,
-      isActive: 1,
+      isActive,
       createdAt,
       publicId: getPublicIdForCloudinary(avatarUrl),
       avatar: avatarUrl,

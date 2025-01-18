@@ -3,8 +3,7 @@ import cloudinary from "../../config/cloudinaryConfig.js";
 import base64 from "base-64";
 
 const editAdmin = async (req, res) => {
-  const { id, username, password, isSuperAdmin } = req.body;
-
+  const { id, username, password, isSuperAdmin, isActive } = req.body;
   if (!id) {
     return res.status(400).json({ message: "Admin ID is required" });
   }
@@ -32,6 +31,7 @@ const editAdmin = async (req, res) => {
   let newAdminData = {};
   if (username) newAdminData.username = username;
   if (password) newAdminData.password = base64.encode(password);
+  if (isActive) newAdminData.isActive = isActive;
   if (isSuperAdmin !== undefined) newAdminData.isSuperAdmin = isSuperAdmin;
   if (req.file) {
     newAdminData.avatar = avatarUrl;

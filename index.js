@@ -38,7 +38,11 @@ import {
 } from "./controllers/officials/index.js";
 
 mongoose
-  .connect(process.env.ATLAS_DB_LINK)
+  .connect(process.env.ATLAS_DB_LINK, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    serverSelectionTimeoutMS: 5000, // Adjust timeout as needed
+  })
   .then((res) => console.log("Connect to Atlas"))
   .catch((err) => console.log(err));
 

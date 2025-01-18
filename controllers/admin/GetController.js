@@ -2,7 +2,7 @@ import AdminModel from "../../models/Admin.js";
 const getAdmin = (req, res) => {
   // Initialize the query object
   let query = {};
-
+  console.log(query, "query");
   // Dynamically add filters if they exist
   if (req.body.username) query.username = req.body.username;
   if (req.body.isSuperAdmin) query.isSuperAdmin = req.body.isSuperAdmin;
@@ -17,7 +17,6 @@ const getAdmin = (req, res) => {
 
   AdminModel.find(query)
     .then((result) => {
-      // console.log("Result from database:", result);
       res.json(result);
     })
     .catch((err) => {
